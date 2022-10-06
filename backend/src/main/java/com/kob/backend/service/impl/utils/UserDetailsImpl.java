@@ -1,12 +1,14 @@
 package com.kob.backend.service.impl.utils;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import com.kob.backend.pojo.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+@Data
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
