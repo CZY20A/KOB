@@ -1,10 +1,6 @@
 <template>
-    <div class="container content-field">
-         <div class="row justify-content-md-center">
-            <div class="col-3">
-                <form @submit.prevent='login' class="login">
+                <form @submit.prevent='login' v-if="!$store.state.user.pulling_info">
                     <div :class="frameClass + ' loginFrame'">
-                    <p class="loginTitle">Login</p>
                     <div>
                         <label>
                             <span>
@@ -16,7 +12,7 @@
                                         fill="#ffffff" p-id="3809"></path></svg>
                             </span>
                             <span>用户名</span>
-                            <input  placeholder="   UserName" type="text"  v-model="username" style="width:93%">
+                            <input  placeholder="   UserName" type="text"  v-model="username">
                         </label>
                     </div>
                     <div>
@@ -41,10 +37,6 @@
                     </div>
                     </div>
                 </form>
-            </div>
-         </div>
-   
-        </div>
 </template>
 
 <script>
@@ -63,7 +55,25 @@ export default{
         let message = ref("");      
         let alertClass = ref("hide");
         let frameClass = ref("loginFrame-normal");
-    
+
+        const jwt_token = localStorage.getItem('jwt_token');
+        if(jwt_token){
+            store.commit('updateToken', jwt_token);
+            store.dispatch('getInfo', {
+                success(){
+                    store.commit("updatePullingInfo", true);
+                    router.push({name:"home"});
+                },
+                error(){
+                    store.dispatch('logout');
+                    store.commit("updatePullingInfo", false);
+                }
+            })
+        }else{
+            store.commit("updatePullingInfo", false);
+        }
+
+
         const login = () => {
             frameClass.value = 'loginFrame-normal';
             alertClass.value = 'hide';
@@ -77,7 +87,7 @@ export default{
                             router.push({name:"home"});
                         },
                         error(){
-                            
+                            store.commit("logout");
                         }
                     })
                 },
@@ -124,12 +134,7 @@ export default{
             height: 400px;
             background: rgba(0, 0, 0, 0.3);
             /*元素上下左右都居中*/
-            position: fixed;
-            margin: auto;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            margin: 50px auto;
             border-radius: 10px;
             padding: 50px 0;
             border-radius: 10px;
@@ -140,15 +145,10 @@ export default{
 
         .loginFrame-error {
             width: 700px;
-            height: 500px;
+            height: 400px;
             background: rgba(0, 0, 0, 0.3);
             /*元素上下左右都居中*/
-            position: fixed;
-            margin: auto;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            margin: 50px auto;
             border-radius: 10px;
             padding: 50px 0;
             border-radius: 10px;
@@ -158,16 +158,10 @@ export default{
 
 
         .loginFrame > div {
-            width: 350px;
+            width: 30%;
             height: 50px;
             margin: 40px auto;
             color: white;
-        }
-
-        .loginFrame > p {
-            text-align: center;
-            color: white;
-            font-size: 25px;
         }
 
         .loginFrame > div span {
