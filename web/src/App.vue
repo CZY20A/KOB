@@ -21,7 +21,8 @@
 
 <style>
 body{
-  background-image: url("@/assets/images/background.png");
+  background-image: url("@/assets/images/background.jpg");
   background-size: cover;
+  font-family:  sans-serif;
 }
 </style>
