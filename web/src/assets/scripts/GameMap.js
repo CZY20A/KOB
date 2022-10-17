@@ -4,7 +4,7 @@ import { Snake } from './Snake';
 
 //13x13地图
 export class GameMap extends AcGameObject{
-    constructor(ctx, parent){ //画布 画布的父元素(即包住画图的标签,用于动态修改画布长宽)
+    constructor(ctx, parent, store){ //画布 画布的父元素(即包住画图的标签,用于动态修改画布长宽)
         super();
         this.ctx = ctx;
         this.parent = parent;
@@ -16,57 +16,17 @@ export class GameMap extends AcGameObject{
         this.walls = [];
         this.innert_walls_count = 20; //障碍物的个数
 
+        this.store = store;
+
         this.snakes = [
             new Snake({id:0, color: '#4876EC', r: this.rows-2, c:1}, this),
             new Snake({id:1, color: '#F94848', r: 1, c: this.cols - 2}, this),
         ]
     }
 
-    //Flod_fill算法判断是否连通(简单算法题)
-    check_connectivity(g, sx, sy, tx, ty){
-        if(sx == tx && sy == ty) return true;
-        g[sx][sy] = true; //防止来回走
-        let dx = [-1, 0, 1, 0], dy = [0, 1, 0, -1]; //上右下左
-        for(let i = 0; i < 4; ++i){
-            let x = sx + dx[i], y = sy + dy[i];
-            if(!g[x][y] && this.check_connectivity(g, x, y, tx, ty))
-                return true;
-        }
-        return false;
-    }
 
     create_walls() {
-        const g = []; //二维数组,该位置是否有墙
-        for(let r = 0; r < this.rows; ++r){
-            g[r] = [];
-            for(let c = 0; c < this.cols; ++c){
-                g[r][c] = false;
-            }
-        }
-
-        //给四周加上障碍物
-        for(let r = 0; r < this.rows; ++r) { 
-            g[r][0] = g[r][this.cols-1] = true;
-        }
-        for(let c = 0; c < this.cols; ++c) { 
-            g[0][c] = g[this.rows - 1][c] = true;
-        }
-
-        //创建随机障碍物
-        for(let i = 0; i < this.innert_walls_count / 2; ++i){
-            for(let j = 0; j < 1000; ++j){
-                let r = parseInt(Math.random() * this.rows);
-                let c = parseInt(Math.random() * this.cols);
-                if(g[r][c] || g[c][r] ) continue;
-                if(r == this.rows - 2 && c == 1 || r == 1 && c == this.cols-2) continue; //避免覆盖到蛇的位置
-                g[r][c] = g[this.rows - r - 1][this.cols - c - 1] = true;
-                break;
-            }
-        }
-
-        const copy_g = JSON.parse(JSON.stringify(g)); //通过转换成string再转换为json达到copy对象的效果
-        if(!this.check_connectivity(copy_g, this.rows - 2, 1, 1, this.cols - 2)) return false; //两条蛇不连通不要生成
-
+       const g = this.store.state.pk.gamemap;
         for(let r = 0; r < this.rows; ++r){
             for(let c = 0; c < this.cols; ++c){
                 if(g[r][c]){
@@ -75,7 +35,6 @@ export class GameMap extends AcGameObject{
             }
         }
 
-        return true;
     }
 
     add_listening_events(){
@@ -95,9 +54,7 @@ export class GameMap extends AcGameObject{
 
     //暴力出奇迹直到两条蛇连通为止!
     start(){
-        for(let i = 0; i < 1000; ++i)
-            if(this.create_walls())
-                break;
+        this.create_walls();
         this.add_listening_events();
     }
 

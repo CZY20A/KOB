@@ -6,7 +6,8 @@ import RanklistIndexView from '../views/ranklist/RanklistIndexView';
 import NotFoud from '../views/error/NotFound';
 import UserAccountLoginView from '../views/user/account/UserAccountLoginView';
 import UserAccountRegisterView from '../views/user/account/UserAccountRegisterView';
-import store from '../store/index'
+import store from '../store/index';
+import PkSnakeView from '../views/pk/PkSnakeView'
 
 const routes = [
   
@@ -22,6 +23,14 @@ const routes = [
     path: '/',
     name:"home",
     redirect:'/pk/',
+    meta:{
+      requestAuth: true,
+    }
+  },
+  {
+    path: '/pk/snake/',
+    name:"snake",
+    component:PkSnakeView,
     meta:{
       requestAuth: true,
     }
