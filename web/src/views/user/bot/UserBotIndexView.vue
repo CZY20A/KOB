@@ -29,6 +29,12 @@
                         <textarea class="form-control" id="add-bot-descriptio" rows="3" placeholder="请输入Bot简介" v-model="botadd.description"></textarea>
                         </div>
                         <div class="mb-3">
+                                    <label class="form-label">所用游戏</label>
+                                    <select class="form-select" aria-label="Default select example" v-model="botadd.gameId">
+                                        <option v-for="game in allGame" :key="game.id" :value="game.id" selected>{{game.title}}</option>
+                                    </select>
+                            </div>
+                        <div class="mb-3">
                         <label for="add-bot-code" class="form-label">代码</label>
                         <VAceEditor
                             id="add-bot-code"
@@ -67,8 +73,9 @@
                         <div class="content">
                         <div style="margin-bottom:5px;margin-left: 5px;"><span>{{bot.title}}</span> <button type="button" data-bs-toggle="modal" :data-bs-target="'#update-bot-btn-'+bot.id" class="btn btn-warning float-end update" style="background: rgba(255,193,7,0.3);color: white;margin-right: 5px;">修改</button></div>
                         <div style="margin-bottom:5px;margin-left: 5px;"><span>创建时间:{{bot.createtime}}</span> </div>
-                        <div style="margin-bottom:10px;margin-left: 5px;"><span>rating:{{bot.rating}}</span><button @click="remove_bot(bot.id)" type="button" class="btn btn-danger float-end delete" style="background:rgba(220,53,69,0.3);margin-right: 5px;">删除</button></div>
-                        </div>
+                        <div style="margin-bottom:5px;margin-left: 5px;"><span>修改时间:{{bot.modifytime}}</span> </div>
+                        <div style="margin-bottom:10px;margin-left: 5px;"><span>rating:{{bot.rating}} <span style="margin-left: 100px;">所用游戏:{{map.get(bot.gameId)}}</span>   </span><button @click="remove_bot(bot.id)" type="button" class="btn btn-danger float-end delete" style="background:rgba(220,53,69,0.3);margin-right: 5px;">删除</button></div>
+                    </div>
 
 
                         <!-- Modal -->
@@ -87,6 +94,12 @@
                                 <div class="mb-3">
                                 <label :for="'update-bot-description'+bot.id" class="form-label">简介</label>
                                 <textarea class="form-control" :id="'update-bot-description'+bot.id" rows="3" placeholder="请输入Bot简介" v-model="bot.description"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">所用游戏</label>
+                                    <select class="form-select" aria-label="Default select example" v-model="bot.gameId">
+                                        <option v-for="game in allGame" :key="game.id" :value="game.id" :selected="game.id === bot.gameId? true:false">{{game.title}}</option>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                 <label :for="'update-bot-content'+bot.id" class="form-label">代码</label>
@@ -142,7 +155,6 @@ export default{
             "https://cdn.jsdelivr.net/npm/ace-builds@" + require('ace-builds').version + "/src-noconflict/"
         )
 
-
         const store = useStore();
         let bots = ref([]);
         let message = ref("")
@@ -152,6 +164,7 @@ export default{
             description:"",
             content:"",
             message:"",
+            gameId:1,
         })
 
         const add_bot = () => {
@@ -167,12 +180,14 @@ export default{
                     title:botadd.title,
                     description:botadd.description,
                     content:botadd.content,
+                    gameId:botadd.gameId,
                 },
                 success(resp){
                     if(resp.message === 'success'){
                         botadd.content = "";
                         botadd.description = "";
                         botadd.title = "";
+                        botadd.gameId = 1;
                         Modal.getInstance("#add-bot-btn").hide();
                         refresh_bots();
                     }else{
@@ -212,6 +227,7 @@ export default{
                     title:bot.title,
                     content:bot.content,
                     description:bot.description,
+                    gameId:bot.gameId,
                 },
                 success(resp){
                     if(resp.message === 'success'){
@@ -239,6 +255,22 @@ export default{
         }
         refresh_bots();
 
+        let map = new Map();
+        let allGame = ref([]);
+        $.ajax({
+                type:"GET",
+                url:"http://localhost:3000/game/all/",
+                headers:{
+                        Authorization:"Bearer " + store.state.user.token,
+                },
+                success(resp){
+                    allGame.value = resp;
+                    for(let i = 0; i < resp.length; ++i)
+                        map.set(resp[i].id, resp[i].title);
+            
+                }
+            })
+
         return {
             bots,
             botadd,
@@ -247,6 +279,8 @@ export default{
             message,
             update_bot,
             refresh_bots,
+            allGame,
+            map,
         }
     }
 }

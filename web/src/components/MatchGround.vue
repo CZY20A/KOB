@@ -21,29 +21,33 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12" style="text-align:center;padding-top: 15vh;">
+            <div class="col-12" style="text-align:center;padding-top: 20vh;">
                 <button type="button" class="btn start" @click="click_match_btn">{{match_btn_info}}</button>
             </div>
         </div>
     </div>
+    <MatchBoard v-if="finding === 'start'"></MatchBoard>
 </template>
 
 <script>
 import { ref } from 'vue';
 import { useStore } from 'vuex';
+import MatchBoard from '@/components/MatchBoard.vue'
 
 
 export default {
     components:{
-
+        MatchBoard
     },
     setup() {
         let match_btn_info  = ref("开始匹配");
         const store = useStore();
+        let finding = ref("stop");
 
         const click_match_btn = () => {
             console.log(match_btn_info.value);
             if(match_btn_info.value === '开始匹配'){
+                finding.value = 'start';
                 match_btn_info.value = '取消';
                 store.state.pk.socket.send(JSON.stringify({
                     event:"start-matching",
@@ -53,12 +57,14 @@ export default {
                 store.state.pk.socket.send(JSON.stringify({
                     event:"stop-matching",
                 }))
+                finding.value = 'stop';
             }
         }
 
         return {
             match_btn_info,
             click_match_btn,
+            finding
         }
     }
 }

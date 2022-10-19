@@ -69,13 +69,10 @@ export class Snake extends AcGameObject{
         const k = this.cells.length;
         for(let i = k; i > 0; --i) this.cells[i] = JSON.parse(JSON.stringify(this.cells[i - 1])); //深层拷贝，否则赋值的是引用  
 
-        if(!this.gamemap.check_valid(this.next_cell)){ // 操作非法，蛇死亡
-            this.status = 'die';
-        }
     }
 
     update_move(){
-        const move_distance = this.speed * this.timedelta / 1000; //每两帧之间走过的距离
+        const move_distance = this.speed  * this.timedelta / 1000; //每两帧之间走过的距离
         const dx = this.next_cell.x - this.cells[0].x;
         const dy = this.next_cell.y - this.cells[0].y;
         const distance = Math.sqrt(dx * dx + dy * dy);

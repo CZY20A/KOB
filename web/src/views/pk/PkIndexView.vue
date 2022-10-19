@@ -1,44 +1,83 @@
 <template>
-    <div class="container content-field" style="margin:20px auto">
-        <div class="card">
-            <span>蛇蛇作战</span>
+    <div class="container" style="margin:20px auto">
+        <button class="carousel-control-prev" type="button">
+            <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color:black"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+
+        <div class="card" v-for="gameInfo in gameInfos" :key="gameInfo.id">
+            <span>{{gameInfo.title}}</span>
             <div class="content">
-                <h3>蛇蛇作战</h3>
+                <h3>{{gameInfo.title}}</h3>
                 <p>
-                    前十回合每一步蛇增长一格,后十回合每三步蛇增长一格,非法输入、撞墙、撞到敌方身体皆会导致死亡,
-                    为了保证公平只有双方都完成输入后两条蛇才会行动(5s内输入否则视为认输)。
+                    {{gameInfo.description}}
                 </p>
-                <router-link :to="{name:'snake'}">进入游戏</router-link>
+                <router-link :to="{name:gameInfo.name}">进入游戏</router-link>
             </div>
         </div>
-        <div class="card">
-            <span>待定</span>
+
+        <div class="card" v-for="un in undetermined" :key="un.id">
+            <span>{{un.title}}</span>
             <div class="content">
-                <h2>02</h2>
-                <h3>Card Two</h3>
-                <p>Realistic glass card hover effect, realistic glass card hover effect, realistic glass card hover effect.</p>
+                <h3>{{un.title}}</h3>
+                <p>{{un.description}}</p>
                 <a href="#">Read More</a>
             </div>
         </div>
-        <div class="card">
-            <span>待定</span>
-            <div class="content">
-                <h2>03</h2>
-                <h3>Card Three</h3>
-                <p>Realistic glass card hover effect, realistic glass card hover effect, realistic glass card hover effect, realistic glass card hover effect.</p>
-                <a href="#">Read More</a>
-            </div>
-        </div>
+
+
+        <button class="carousel-control-next" type="button">
+            <span class="carousel-control-next-icon" aria-hidden="true" style="background-color:black"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 </template>
 
 <script>
-
+import $ from 'jquery';
+import { ref } from 'vue';
+import { useStore } from 'vuex';
 
 export default {
     components:{
         
     },
+    setup() {
+        const store = useStore();
+        let gameInfos = ref([]);
+        let undetermined = ref([]);
+        let currentPage = ref(1);
+
+            $.ajax({
+                type:"GET",
+                url:"http://localhost:3000/game/infopage/",
+                headers:{
+                        Authorization:"Bearer " + store.state.user.token,
+                },
+                data:{
+                    page: currentPage.value,
+                    size: 3,
+                },
+                success(resp){
+                    gameInfos.value = resp;
+                    let n = 3 - gameInfos.value.length;
+                    let undetermined_tmp = [];
+                    for(let i = 0; i < n; ++i){
+                        undetermined_tmp.push({
+                            id:i,
+                            title:"待定",
+                            description:"这将会有一个伟大的游戏",
+                        })
+                    }
+                    undetermined.value = undetermined_tmp;
+                }
+            })
+
+        return {
+            gameInfos,
+            undetermined
+        }
+    }
 }
 
 </script>
@@ -98,6 +137,7 @@ body::after{
     align-items: center;
     flex-wrap: wrap;
     z-index: 1;
+    top: 10vh;
 }
 .container .card{
     /* 相对定位 */
