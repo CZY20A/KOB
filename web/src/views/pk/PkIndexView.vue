@@ -47,7 +47,7 @@
                 </a>
 
 
-                <router-link :to="{name:gameInfo.name}">进入游戏</router-link>
+                <router-link :to="{name:gameInfo.name}" @click="heartBeat">进入游戏</router-link>
             </div>
         </div>
 
@@ -72,6 +72,8 @@
 import $ from 'jquery';
 import { ref } from 'vue';
 import { useStore } from 'vuex';
+
+import router from "@/router/index";
 
 export default {
     components:{
@@ -106,19 +108,40 @@ export default {
                         })
                     }
                     undetermined.value = undetermined_tmp;
+                },
+                error() {
+                    alert("账号已在别的地方登录或登录过期，请重新登录");
+                    store.commit("logout");
+                    router.push({name:"user_account_login"});
                 }
             })
         
         const getDescription = (i) => {
+            heartBeat();
             description.value = gameInfos.value[i].description;
         }
 
+        const heartBeat = () => {
+            $.ajax({
+                    type:"GET",
+                    url:"http://172.18.90.64:3000/heartbeat/",
+                     headers:{
+                        Authorization:"Bearer " + store.state.user.token,
+                    },
+                    error() {
+                        alert("账号已在别的地方登录或登录过期，请重新登录");
+                        store.commit("logout");
+                        router.push({name:"user_account_login"});
+                    }
+                })
+        }
 
         return {
             gameInfos,
             undetermined,
             description,
             getDescription,
+            heartBeat,
         }
     }
 }

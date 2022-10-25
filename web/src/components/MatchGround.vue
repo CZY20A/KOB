@@ -33,7 +33,8 @@
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 import MatchBoard from '@/components/MatchBoard.vue'
-
+import $ from 'jquery';
+import router from "@/router/index";
 
 export default {
     components:{
@@ -45,8 +46,20 @@ export default {
         let finding = ref("stop");
 
         const click_match_btn = () => {
-            console.log(match_btn_info.value);
             if(match_btn_info.value === '开始匹配'){
+                $.ajax({
+                    type:"GET",
+                    url:"http://172.18.90.64:3000/heartbeat/",
+                     headers:{
+                        Authorization:"Bearer " + store.state.user.token,
+                    },
+                    error() {
+                        alert("账号已在别的地方登录或登录过期，请重新登录");
+                        store.commit("logout");
+                        router.push({name:"user_account_login"});
+                    }
+                })
+
                 finding.value = 'start';
                 match_btn_info.value = '取消';
                 store.state.pk.socket.send(JSON.stringify({

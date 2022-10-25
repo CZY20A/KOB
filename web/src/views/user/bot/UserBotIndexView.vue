@@ -148,6 +148,7 @@ import {reactive, ref} from 'vue'
 import {Modal} from 'bootstrap/dist/js/bootstrap' 
 import { VAceEditor } from 'vue3-ace-editor';
 import ace from 'ace-builds';
+import router from "@/router/index";
 
 export default{
     components:{
@@ -163,7 +164,6 @@ export default{
         let bots = ref([]);
         let message = ref("")
 
-        console.log(store.state.user)
 
         const botadd  = reactive({
             title:"",
@@ -175,7 +175,6 @@ export default{
 
         const add_bot = () => {
             botadd.message = "";
-            console.log(botadd)
             $.ajax({
                 type:"POST",
                 url:"http://172.18.90.64:3000/user/bot/add/",
@@ -201,7 +200,9 @@ export default{
                     }
                 },
                 error() {
-                    store.dispatch('logout');
+                    alert("账号已在别的地方登录或登录过期，请重新登录");
+                    store.commit("logout");
+                    router.push({name:"user_account_login"});
                 }
             })
         }
@@ -220,7 +221,9 @@ export default{
                     refresh_bots();
                 },
                 error() {
-                    store.dispatch('logout');
+                    alert("账号已在别的地方登录或登录过期，请重新登录");
+                    store.commit("logout");
+                    router.push({name:"user_account_login"});
                 }
             })
 
@@ -250,7 +253,9 @@ export default{
                     }
                 },
                 error() {
-                    store.dispatch('logout');
+                    alert("账号已在别的地方登录或登录过期，请重新登录");
+                    store.commit("logout");
+                    router.push({name:"user_account_login"});
                 }
             })
         }
@@ -266,8 +271,11 @@ export default{
                 success(resp){
                     bots.value = resp;
                 },
-                error() {
-                    store.dispatch('logout');
+                error(resp) {
+                    console.log(resp);
+                    alert("账号已在别的地方登录或登录过期，请重新登录");
+                    store.commit("logout");
+                    router.push({name:"user_account_login"});
                 }
             })
         }
@@ -288,7 +296,8 @@ export default{
             
                 },
                 error() {
-                    store.dispatch('logout');
+                    store.commit("logout");
+                    router.push({name:"user_account_login"});
                 }
             })
 

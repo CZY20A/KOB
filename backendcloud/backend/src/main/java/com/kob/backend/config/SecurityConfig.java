@@ -1,6 +1,7 @@
 package com.kob.backend.config;
 
 import com.kob.backend.config.filter.JwtAuthenticationTokenFilter;
+import com.kob.backend.config.filter.RepeatLoginFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+
+    @Autowired
+    private RepeatLoginFilter repeatLoginFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,7 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated();
 
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(repeatLoginFilter, JwtAuthenticationTokenFilter.class);
     }
 
     @Override
