@@ -1,35 +1,33 @@
-
-export default{
+export default {
     state: {
-        status:"matching", //matching表示匹配界面,playing表示对战界面
+        status: "matching", //matching表示匹配界面,playing表示对战界面
         socket: null,
         opponent_username: "",
         opponent_photo: "",
-        gamemap:null,  
+        gamemap: null,
         a_id: 0,
         a_sx: 0,
         a_sy: 0,
         b_id: 0,
         b_sx: 0,
-        b_sy: 0,       
+        b_sy: 0,
         gameObject: null,
-        loser:"none", //all, A, B
-        found:"no", // no yes
+        loser: "none", //all, A, B
+        found: "no", // no yes
     },
-    getters: {
-    },
+    getters: {},
     mutations: {
-        updateSocket(state, socket){
+        updateSocket(state, socket) {
             state.socket = socket;
         },
-        updateOpponent(state, opponent){
+        updateOpponent(state, opponent) {
             state.opponent_username = opponent.username;
             state.opponent_photo = opponent.photo;
         },
-        updateStatus(state, status){
+        updateStatus(state, status) {
             state.status = status;
         },
-        updateGame(state, game){
+        updateGame(state, game) {
             state.gamemap = game.map;
             state.a_id = game.a_id;
             state.a_sx = game.a_sx;
@@ -48,9 +46,6 @@ export default{
             state.found = found;
         }
     },
-    actions: {
-        
-    },
-    modules: {
-    }
+    actions: {},
+    modules: {}
 }

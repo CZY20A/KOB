@@ -1,6 +1,6 @@
 //蛇的每一个关节
-export class Cell{
-    constructor(r, c){
+export class Cell {
+    constructor(r, c) {
         this.r = r;
         this.c = c;
 

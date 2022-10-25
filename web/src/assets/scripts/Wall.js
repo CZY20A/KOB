@@ -1,7 +1,7 @@
 import {AcGameObject} from '@/assets/scripts/AcGameObject';
 
 export class Wall extends AcGameObject {
-    constructor(r, c, gamemap){
+    constructor(r, c, gamemap) {
         super();
         this.r = r;
         this.c = c;
@@ -9,12 +9,12 @@ export class Wall extends AcGameObject {
         this.color = '#B37226';
     }
 
-    update(){
+    update() {
         this.render();
     }
 
     //障碍物也要每帧渲染 因为浏览器大小可能改变
-    render(){
+    render() {
         const L = this.gamemap.L;
         const ctx = this.gamemap.ctx;
 

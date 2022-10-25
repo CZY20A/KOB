@@ -1,10 +1,10 @@
-import { AcGameObject } from '../scripts/AcGameObject'
-import { Wall } from './Wall';
-import { Snake } from './Snake';
+import {AcGameObject} from '../scripts/AcGameObject'
+import {Wall} from './Wall';
+import {Snake} from './Snake';
 
 //13x13地图
-export class GameMap extends AcGameObject{
-    constructor(ctx, parent, store){ //画布 画布的父元素(即包住画图的标签,用于动态修改画布长宽)
+export class GameMap extends AcGameObject {
+    constructor(ctx, parent, store) { //画布 画布的父元素(即包住画图的标签,用于动态修改画布长宽)
         super();
         this.ctx = ctx;
         this.parent = parent;
@@ -19,17 +19,17 @@ export class GameMap extends AcGameObject{
         this.store = store;
 
         this.snakes = [
-            new Snake({id:0, color: '#4876EC', r: this.rows-2, c:1}, this),
-            new Snake({id:1, color: '#F94848', r: 1, c: this.cols - 2}, this),
+            new Snake({id: 0, color: '#4876EC', r: this.rows - 2, c: 1}, this),
+            new Snake({id: 1, color: '#F94848', r: 1, c: this.cols - 2}, this),
         ]
     }
 
 
     create_walls() {
-       const g = this.store.state.pk.gamemap;
-        for(let r = 0; r < this.rows; ++r){
-            for(let c = 0; c < this.cols; ++c){
-                if(g[r][c]){
+        const g = this.store.state.pk.gamemap;
+        for (let r = 0; r < this.rows; ++r) {
+            for (let c = 0; c < this.cols; ++c) {
+                if (g[r][c]) {
                     this.walls.push(new Wall(r, c, this));
                 }
             }
@@ -37,23 +37,23 @@ export class GameMap extends AcGameObject{
 
     }
 
-    add_listening_events(){
+    add_listening_events() {
         this.ctx.canvas.focus();
-        
+
         this.ctx.canvas.addEventListener('keydown', e => {
             let d = -1;
-            if(e.key === 'w') d = 0;
-            else if(e.key === 'd') d = 1;
-            else if(e.key === 's') d = 2;
-            else if(e.key === 'a') d = 3;
-            else if(e.key === 'ArrowUp') d = 0;
-            else if(e.key === 'ArrowRight') d = 1;
-            else if(e.key === 'ArrowDown') d = 2;
-            else if(e.key === 'ArrowLeft') d = 3;
+            if (e.key === 'w') d = 0;
+            else if (e.key === 'd') d = 1;
+            else if (e.key === 's') d = 2;
+            else if (e.key === 'a') d = 3;
+            else if (e.key === 'ArrowUp') d = 0;
+            else if (e.key === 'ArrowRight') d = 1;
+            else if (e.key === 'ArrowDown') d = 2;
+            else if (e.key === 'ArrowLeft') d = 3;
 
-            if(d >= 0 ){
+            if (d >= 0) {
                 this.store.state.pk.socket.send(JSON.stringify({
-                    event:"move",
+                    event: "move",
                     direction: d,
                 }))
             }
@@ -61,46 +61,46 @@ export class GameMap extends AcGameObject{
     }
 
     //暴力出奇迹直到两条蛇连通为止!
-    start(){
+    start() {
         this.create_walls();
         this.add_listening_events();
     }
 
-    update_size(){
+    update_size() {
         this.L = parseInt(Math.min(this.parent.clientWidth / this.cols, this.parent.clientHeight / this.rows)); //整数不会有浮点数的间隔
         this.ctx.canvas.width = this.cols * this.L;
         this.ctx.canvas.height = this.L * this.rows;
     }
 
     //两条蛇是否准备完毕进入下一个回合
-    check_ready(){
-        for(const snake of this.snakes){
-            if(snake.status !== "idle") return false;
-            if(snake.direction === -1) return false;
+    check_ready() {
+        for (const snake of this.snakes) {
+            if (snake.status !== "idle") return false;
+            if (snake.direction === -1) return false;
         }
         return true;
     }
 
     //让两条蛇进入下一回合
-    next_step(){
-        for(const snake of this.snakes){
+    next_step() {
+        for (const snake of this.snakes) {
             snake.next_step();
         }
     }
 
     //检测目标位置是否合法:没有撞到两条蛇的身体和障碍物
-    check_valid(cell){
-        for(const wall of this.walls){
-            if(wall.r === cell.r && wall.c === cell.c)
+    check_valid(cell) {
+        for (const wall of this.walls) {
+            if (wall.r === cell.r && wall.c === cell.c)
                 return false;
         }
-        for(const snake of this.snakes){
+        for (const snake of this.snakes) {
             let k = snake.cells.length;
-            if(!snake.check_tail_increasing()){ //当蛇尾不增加时，蛇尾会随着前进而改变位置故蛇尾不用判断
+            if (!snake.check_tail_increasing()) { //当蛇尾不增加时，蛇尾会随着前进而改变位置故蛇尾不用判断
                 k--;
             }
-            for(let i = 0; i < k; ++i){
-                if(cell.r === snake.cells[i].r && cell.c === snake.cells[i].c) 
+            for (let i = 0; i < k; ++i) {
+                if (cell.r === snake.cells[i].r && cell.c === snake.cells[i].c)
                     return false;
             }
         }
@@ -108,21 +108,21 @@ export class GameMap extends AcGameObject{
     }
 
 
-    update(){
+    update() {
         this.update_size();
-        if(this.check_ready()){
+        if (this.check_ready()) {
             this.next_step();
         }
         this.render()
     }
 
-    render(){
+    render() {
         const color_even = '#AAD751', color_odd = '#A2D149'; //偶数格和奇数格的颜色
-        for(let r = 0; r < this.rows; ++r)
-            for(let c = 0; c < this.cols; ++c){
-                if((r + c) % 2 === 0){
+        for (let r = 0; r < this.rows; ++r)
+            for (let c = 0; c < this.cols; ++c) {
+                if ((r + c) % 2 === 0) {
                     this.ctx.fillStyle = color_even;
-                }else{
+                } else {
                     this.ctx.fillStyle = color_odd;
                 }
                 this.ctx.fillRect(c * this.L, r * this.L, this.L, this.L); //canvas坐标系横着是x 竖着是y

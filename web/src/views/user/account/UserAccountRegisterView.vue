@@ -77,7 +77,7 @@ export default{
             message.value = '';
             $.ajax({
                 type:"POST",
-                url:"http://localhost:3000/user/account/register/",
+                url:"http://172.18.90.64:3000/user/account/register/",
                 data:{
                     username:username.value,
                     password:password.value,

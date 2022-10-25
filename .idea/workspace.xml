@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e21947f4-9926-462d-b17f-7d068a31e6d3" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/kob/backend/consumer/utils/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/kob/backend/consumer/utils/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/kob/backend/pojo/GameInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/kob/backend/pojo/GameInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/assets/scripts/Cell.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/assets/scripts/Cell.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/assets/scripts/GameMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/assets/scripts/GameMap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/assets/scripts/Snake.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/assets/scripts/Snake.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/assets/scripts/Wall.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/assets/scripts/Wall.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/PlayGround.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/PlayGround.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/store/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/store/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/store/pk.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/store/pk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/store/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/store/user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/views/pk/PkIndexView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/views/pk/PkIndexView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/views/pk/PkSnakeView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/views/pk/PkSnakeView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/views/user/account/UserAccountRegisterView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/views/user/account/UserAccountRegisterView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/views/user/bot/UserBotIndexView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/views/user/bot/UserBotIndexView.vue" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="E:\maven\repositories" />
+        <option name="mavenHome" value="$PROJECT_DIR$/../../../maven/apache-maven-3.3.9" />
+        <option name="userSettingsFile" value="E:\maven\apache-maven-3.3.9\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2GWCWzYqknh3gAEuslFHtI3jae3" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e21947f4-9926-462d-b17f-7d068a31e6d3" name="Default Changelist" comment="" />
+      <created>1666494988489</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1666494988489</updated>
+      <workItem from="1666494999168" duration="82000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+</project>

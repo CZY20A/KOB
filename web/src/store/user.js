@@ -1,83 +1,86 @@
 import $ from 'jquery'
 
-export default{
+export default {
     state: {
-            id:"",
-            username:"",
-            photo:"",
-            token:"",
-            is_login:false,
-            pulling_info:true, //是否正在拉取信息
+        id: "",
+        username: "",
+        photo: "",
+        rating: "",
+        token: "",
+        is_login: false,
+        pulling_info: true, //是否正在拉取信息
     },
-    getters: {
-    },
+    getters: {},
     mutations: {
-        updateUser(state, user){
+        updateUser(state, user) {
             state.id = user.id;
             state.username = user.username;
             state.photo = user.photo;
             state.is_login = user.is_login;
+            state.rating = user.rating;
         },
-        updateToken(state, token){
+        updateToken(state, token) {
             state.token = token;
         },
-        logout(state){
+        logout(state) {
             localStorage.removeItem('jwt_token');
             state.id = '',
-            state.username = '';
+                state.username = '';
             state.photo = '';
             state.token = '';
             state.is_login = false;
         },
-        updatePullingInfo(state, pulling_info){
+        updatePullingInfo(state, pulling_info) {
             state.pulling_info = pulling_info;
+        },
+        updateRating(state, rating) {
+            state.rating = rating;
         }
     },
     actions: {
-        login(context, data){
+        login(context, data) {
             $.ajax({
-                type:"POST",
-                url:"http://localhost:3000/user/account/token/",
-                data:{
-                    username:data.username,
-                    password:data.password,
+                type: "POST",
+                url: "http://172.18.90.64:3000/user/account/token/",
+                data: {
+                    username: data.username,
+                    password: data.password,
                 },
-                success(resp){
-                    if(resp.message === 'success'){
+                success(resp) {
+                    if (resp.message === 'success') {
                         localStorage.setItem('jwt_token', resp.token);
                         context.commit('updateToken', resp.token);
                         data.success();
-                    }else{
+                    } else {
                         data.error();
                     }
                 },
-                error(){
+                error() {
                     data.error();
                 }
             })
         },
-        getInfo(context, data){
+        getInfo(context, data) {
             $.ajax({
-                type:"GET",
-                url:"http://localhost:3000/user/account/info/",
-                headers:{
-                    Authorization:"Bearer " + context.state.token,
+                type: "GET",
+                url: "http://172.18.90.64:3000/user/account/info/",
+                headers: {
+                    Authorization: "Bearer " + context.state.token,
                 },
-                success(resp){
-                    if(resp.message === 'success'){
+                success(resp) {
+                    if (resp.message === 'success') {
                         context.commit("updateUser", {
                             ...resp,
-                            is_login:true,
+                            is_login: true,
                         })
                         data.success();
                     }
                 },
-                error(){
+                error() {
                     data.error();
                 }
             })
         },
     },
-    modules: {
-    }
+    modules: {}
 }

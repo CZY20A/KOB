@@ -1,17 +1,52 @@
 <template>
+   <!-- Modal -->
+<div class="modal fade my-model" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" 
+    style="position:absolute; ">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">游戏详情</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="
+      font-size: 16px;
+    color: #000;
+    font-weight: bold;
+    font-size:18px;
+    margin: 10px 0 15px 0;">
+        {{description}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
     <div class="container" style="margin:20px auto">
+
+        
         <button class="carousel-control-prev" type="button">
             <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color:black"></span>
             <span class="visually-hidden">Previous</span>
         </button>
 
-        <div class="card" v-for="gameInfo in gameInfos" :key="gameInfo.id">
+
+        <div class="card" v-for="(gameInfo,i) in gameInfos" :key="gameInfo.id" >
             <span>{{gameInfo.title}}</span>
             <div class="content">
                 <h3>{{gameInfo.title}}</h3>
                 <p>
-                    {{gameInfo.description}}
+                    {{gameInfo.brief}}
                 </p>
+                
+
+                <!-- Button trigger modal -->
+                <a type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="getDescription(i)">
+                    游戏详情
+                </a>
+
+
                 <router-link :to="{name:gameInfo.name}">进入游戏</router-link>
             </div>
         </div>
@@ -47,10 +82,11 @@ export default {
         let gameInfos = ref([]);
         let undetermined = ref([]);
         let currentPage = ref(1);
+        let description = ref("");
 
             $.ajax({
                 type:"GET",
-                url:"http://localhost:3000/game/infopage/",
+                url:"http://172.18.90.64:3000/game/infopage/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -72,10 +108,17 @@ export default {
                     undetermined.value = undetermined_tmp;
                 }
             })
+        
+        const getDescription = (i) => {
+            description.value = gameInfos.value[i].description;
+        }
+
 
         return {
             gameInfos,
-            undetermined
+            undetermined,
+            description,
+            getDescription,
         }
     }
 }
@@ -85,23 +128,19 @@ export default {
 <style scoped>
 
 
-*{
-    /* 初始化 */
+/* *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* 设置字体 */
     font-family: "Poppins";
 }
 body{
-    /* 100%窗口高度 */
     min-height: 100vh;
-    /* 弹性布局 水平+垂直居中 */
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #161626;
-}
+} */
 /* 给背景增加两个渐变圆 */
 body::before{
     content: "";
@@ -169,7 +208,7 @@ body::after{
 }
 
 .container .card .content{
-    background: url("@/assets/images/gameback.jpeg") 45% 100%;
+    background: url("@/assets/images/gameback.jpeg") 40% 100%;
     width: 100%;
     height: 100%;
     padding: 20px;
@@ -179,6 +218,7 @@ body::after{
     opacity: 0;
     transition: 0.5s;
 }
+
 .container .card:hover .content{
     /* 鼠标移入，上移+显示 */
     transform: translateY(0);
@@ -200,19 +240,24 @@ body::after{
     font-size: 16px;
     color: #000;
     font-weight: bold;
-    margin: 10px 0 15px 0;
+    margin: 15px 0 15px 0;
 }
 .container .card .content a{
     position: relative;
     display: inline-block;
     padding: 8px 20px;
-    margin-top: 15px;
-    background-color: #fff;
+    margin-top: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
     color: #000;
     text-decoration: none;
     border-radius: 20px;
     font-weight: 500;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    margin-right: 8px;
+}
+
+.container .card .content a:hover{
+    background-color: rgba(255, 255, 255, 1);
 }
 
 </style>

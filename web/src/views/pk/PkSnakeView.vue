@@ -11,6 +11,7 @@ import { onMounted, onUnmounted } from 'vue';
 import { useStore } from "vuex";
 import ResultBoard from '@/components/ResultBoard.vue';
 import MatchGround from "../../components/MatchGround.vue";
+import router from "@/router/index";
 
 export default {
     components:{
@@ -20,7 +21,7 @@ export default {
 },
     setup(){
         const store = useStore();
-        const socketUrl =  `ws://localhost:3000/websocket/${store.state.user.token}/`
+        const socketUrl =  `ws://172.18.90.64:3000/websocket/${store.state.user.token}/`
 
         let socket = null;
         onMounted(() => {
@@ -31,7 +32,6 @@ export default {
             socket = new WebSocket(socketUrl);
 
             socket.onopen = () => {
-                console.log("connected!");
                 store.commit('updateSocket', socket);
             }
 
@@ -62,11 +62,14 @@ export default {
                     if(data.loser === 'all' || data.loser === 'B') {
                         snake1.status = 'die';
                     }
+                } else if (data.event === 'logout') {
+                    store.dispatch('logout');
+                    router.push({name:'home'});
                 }
             }
 
             socket.onclose = () => {
-                console.log("disconnected!");
+
             }
         })
 

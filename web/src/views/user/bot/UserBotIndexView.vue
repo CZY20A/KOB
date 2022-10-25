@@ -1,10 +1,14 @@
 <template>
     <div class="container">
+
+       
+
         <div class="row">
             <div class="col-3">
                 <div class="card box" style="margin-top:20px;padding: 0px;" >
                     <div class="card-body" style="margin:0px;">
                         <img :src="$store.state.user.photo" alt="" style="width: 100%;height: 100%;"/>
+                        <span class="rating">rating: {{$store.state.user.rating}}</span>
                     </div>
                 </div>
             </div>
@@ -74,7 +78,7 @@
                         <div style="margin-bottom:5px;margin-left: 5px;"><span>{{bot.title}}</span> <button type="button" data-bs-toggle="modal" :data-bs-target="'#update-bot-btn-'+bot.id" class="btn btn-warning float-end update" style="background: rgba(255,193,7,0.3);color: white;margin-right: 5px;">修改</button></div>
                         <div style="margin-bottom:5px;margin-left: 5px;"><span>创建时间:{{bot.createtime}}</span> </div>
                         <div style="margin-bottom:5px;margin-left: 5px;"><span>修改时间:{{bot.modifytime}}</span> </div>
-                        <div style="margin-bottom:10px;margin-left: 5px;"><span>rating:{{bot.rating}} <span style="margin-left: 100px;">所用游戏:{{map.get(bot.gameId)}}</span>   </span><button @click="remove_bot(bot.id)" type="button" class="btn btn-danger float-end delete" style="background:rgba(220,53,69,0.3);margin-right: 5px;">删除</button></div>
+                        <div style="margin-bottom:10px;margin-left: 5px;"> <span>所用游戏:{{map.get(bot.gameId)}}</span>  <button @click="remove_bot(bot.id)" type="button" class="btn btn-danger float-end delete" style="background:rgba(220,53,69,0.3);margin-right: 5px;">删除</button></div>
                     </div>
 
 
@@ -159,6 +163,8 @@ export default{
         let bots = ref([]);
         let message = ref("")
 
+        console.log(store.state.user)
+
         const botadd  = reactive({
             title:"",
             description:"",
@@ -172,7 +178,7 @@ export default{
             console.log(botadd)
             $.ajax({
                 type:"POST",
-                url:"http://localhost:3000/user/bot/add/",
+                url:"http://172.18.90.64:3000/user/bot/add/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -193,6 +199,9 @@ export default{
                     }else{
                         botadd.message = resp.message;
                     }
+                },
+                error() {
+                    store.dispatch('logout');
                 }
             })
         }
@@ -200,7 +209,7 @@ export default{
         const remove_bot = (id) => {
             $.ajax({
                 type:"POST",
-                url:"http://localhost:3000/user/bot/remove/",
+                url:"http://172.18.90.64:3000/user/bot/remove/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -209,6 +218,9 @@ export default{
                 },
                 success(){
                     refresh_bots();
+                },
+                error() {
+                    store.dispatch('logout');
                 }
             })
 
@@ -218,7 +230,7 @@ export default{
             message.value = "";
             $.ajax({
                 type:"POST",
-                url:"http://localhost:3000/user/bot/update/",
+                url:"http://172.18.90.64:3000/user/bot/update/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -236,6 +248,9 @@ export default{
                     }else{
                         message.value = resp.message;
                     }
+                },
+                error() {
+                    store.dispatch('logout');
                 }
             })
         }
@@ -244,12 +259,15 @@ export default{
             message.value = "";
             $.ajax({
                 type:"get",
-                url:"http://localhost:3000/user/bot/getlist/",
+                url:"http://172.18.90.64:3000/user/bot/getlist/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
                 success(resp){
                     bots.value = resp;
+                },
+                error() {
+                    store.dispatch('logout');
                 }
             })
         }
@@ -259,7 +277,7 @@ export default{
         let allGame = ref([]);
         $.ajax({
                 type:"GET",
-                url:"http://localhost:3000/game/all/",
+                url:"http://172.18.90.64:3000/game/all/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -268,6 +286,9 @@ export default{
                     for(let i = 0; i < resp.length; ++i)
                         map.set(resp[i].id, resp[i].title);
             
+                },
+                error() {
+                    store.dispatch('logout');
                 }
             })
 
@@ -326,5 +347,11 @@ export default{
         box-shadow: -15px 30px 50px rgba(0,0,0,0.3);
         transform: scale(1.05) translateX(10px) translateY(-15px);
         transition: all 0.5s ease;
+   }
+
+   .rating {
+    font-style: italic;
+    font-size: 20px;
+    font-weight: 600;
    }
 </style>
