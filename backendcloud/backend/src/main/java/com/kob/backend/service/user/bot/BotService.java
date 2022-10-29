@@ -13,4 +13,6 @@ public interface BotService {
     Map<String, String> update(Bot bot);
 
     List<Bot> getList();
+
+    List<Bot> getListByGameId(Integer gameId);
 }

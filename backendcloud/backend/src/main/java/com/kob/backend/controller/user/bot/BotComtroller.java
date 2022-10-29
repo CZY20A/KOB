@@ -1,5 +1,6 @@
 package com.kob.backend.controller.user.bot;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.kob.backend.pojo.Bot;
 import com.kob.backend.service.impl.user.bot.BotServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +36,10 @@ public class BotComtroller {
     @GetMapping("/getlist/")
     public List<Bot> getList() {
         return botService.getList();
+    }
+
+    @GetMapping("/getlistByGameId")
+    public List<Bot> getListByGameId(Integer gameId) {
+        return botService.getListByGameId(gameId);
     }
 }

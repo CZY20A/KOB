@@ -67,18 +67,39 @@
                 </div>
                 </div>
 
-                    <h3>
-                        我的Bot 
-                        <span>
-                            <button type="button" class="btn btn-primary float-end create" data-bs-toggle="modal" data-bs-target="#add-bot-btn" style="background:rgba(13,110,253,0.3)">创建Bot</button>
-                        </span>
-                    </h3>
+                    
+
+
+
+
+
+
+                <nav class="navbar navbar-expand-lg">
+                <div class="container" style="width:100%;background-color: rgba(255,255,255,0.6);">
+                    <a class="navbar-brand" style="font-style:italic;margin-right: 0;">我的Bot</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin:0 auto">
+                        <li class="nav-item" v-for="gameinfo in gameInfos" :key="gameinfo.id">
+                            <button type="button" :class="'btn ' + (gameinfo.id===currentGameId?'btn-dark':'btn-outline-dark')" style="margin-left:20px" @click="changeGame(gameinfo.id)">{{gameinfo.title}}</button>
+                        </li>
+                    </ul>
+                    <span class="navbar-text">
+                        <button class="btn btn-primary create" data-bs-toggle="modal" data-bs-target="#add-bot-btn">创建Bot</button>
+                    </span>
+                    </div>
+                </div>
+                </nav>
+
+                    
                    <div class="list" v-for="bot in bots" :key="bot.id">
                         <div class="content">
-                        <div style="margin-bottom:5px;margin-left: 5px;"><span>{{bot.title}}</span> <button type="button" data-bs-toggle="modal" :data-bs-target="'#update-bot-btn-'+bot.id" class="btn btn-warning float-end update" style="background: rgba(255,193,7,0.3);color: white;margin-right: 5px;">修改</button></div>
+                        <div style="margin-bottom:5px;margin-left: 5px;"><span>{{bot.title}}</span> <button type="button" data-bs-toggle="modal" :data-bs-target="'#update-bot-btn-'+bot.id" class="btn float-end update" style="background: rgba(255,193,7);color: white;margin-right: 5px;">修改</button></div>
                         <div style="margin-bottom:5px;margin-left: 5px;"><span>创建时间:{{bot.createtime}}</span> </div>
                         <div style="margin-bottom:5px;margin-left: 5px;"><span>修改时间:{{bot.modifytime}}</span> </div>
-                        <div style="margin-bottom:10px;margin-left: 5px;"> <span>所用游戏:{{map.get(bot.gameId)}}</span>  <button @click="remove_bot(bot.id)" type="button" class="btn btn-danger float-end delete" style="background:rgba(220,53,69,0.3);margin-right: 5px;">删除</button></div>
+                        <div style="margin-bottom:10px;margin-left: 5px;"> <span>所用游戏:{{map.get(bot.gameId)}}</span>  <button @click="remove_bot(bot.id)" type="button" class="btn float-end delete" style="background:rgba(220,53,69);margin-right: 5px;color:white;">删除</button></div>
                     </div>
 
 
@@ -160,6 +181,7 @@ export default{
             "https://cdn.jsdelivr.net/npm/ace-builds@" + require('ace-builds').version + "/src-noconflict/"
         )
 
+
         const store = useStore();
         let bots = ref([]);
         let message = ref("")
@@ -172,6 +194,20 @@ export default{
             message:"",
             gameId:1,
         })
+
+        botadd.content = "package com.kob.botrunningsystem.utils;\n" +
+                "\n" +
+                "/**\n* 当前支持java语言\n" +
+                "* input参数是本局对战的所有信息该参数由系统提供,格式为：\n" +
+                "* 地图信息#我的x坐标#我的y坐标#(我的操作)#对手的x坐标#对手的y坐标#(对手的操作) \n" +
+                "* 地图共13行14列x表示竖轴y表示横轴从0开始，地图信息为一个13*14的一维字符串，若该处为墙则为1，否则为0\n"+
+                "*/ \n" +
+                "public class Bot implements com.kob.botrunningsystem.utils.BotInterface{\n" +
+                "    @Override\n" +
+                "    public Integer nextMove(String input) { //返回值:0123分别表示上右下左 \n" +
+                "        return 0;\n" +
+                "    }\n" +
+                "}\n";
 
         const add_bot = () => {
             botadd.message = "";
@@ -189,7 +225,19 @@ export default{
                 },
                 success(resp){
                     if(resp.message === 'success'){
-                        botadd.content = "";
+                        botadd.content = "package com.kob.botrunningsystem.utils;\n" +
+                "\n" +
+                "/**\n* 当前支持java语言\n" +
+                "* input参数是本局对战的所有信息该参数由系统提供,格式为：\n" +
+                "* 地图信息#我的x坐标#我的y坐标#(我的操作)#对手的x坐标#对手的y坐标#(对手的操作) \n" +
+                "* 地图共13行14列x表示竖轴y表示横轴从0开始，地图信息为一个13*14的一维字符串，若该处为墙则为1，否则为0\n"+
+                "*/ \n" +
+                "public class Bot implements com.kob.botrunningsystem.utils.BotInterface{\n" +
+                "    @Override\n" +
+                "    public Integer nextMove(String input) { //返回值:0123分别表示上右下左 \n" +
+                "        return 0;\n" +
+                "    }\n" +
+                "}\n";
                         botadd.description = "";
                         botadd.title = "";
                         botadd.gameId = 1;
@@ -260,19 +308,49 @@ export default{
             })
         }
 
+        let gameInfos = ref([]);
+        let currentPage = ref(1);
+        const get_game_pages = (page) => {
+            $.ajax({
+                type:"GET",
+                url:"http://172.18.90.64:3000/game/infopage/",
+                headers:{
+                        Authorization:"Bearer " + store.state.user.token,
+                },
+                data:{
+                    page: page,
+                    size: 3,
+                },
+                success(resp){
+                    gameInfos.value = resp;
+                },
+                error() {
+                    alert("账号已在别的地方登录或登录过期，请重新登录");
+                    store.commit("logout");
+                    router.push({name:"user_account_login"});
+                }
+            })
+        }
+        get_game_pages(currentPage.value);
+        console.log(gameInfos)
+        
+
+        let currentGameId = ref(1);
         const refresh_bots = () => {
             message.value = "";
             $.ajax({
                 type:"get",
-                url:"http://172.18.90.64:3000/user/bot/getlist/",
+                url:"http://172.18.90.64:3000/user/bot/getlistByGameId/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
+                },
+                data:{
+                    gameId:currentGameId.value,
                 },
                 success(resp){
                     bots.value = resp;
                 },
-                error(resp) {
-                    console.log(resp);
+                error() {
                     alert("账号已在别的地方登录或登录过期，请重新登录");
                     store.commit("logout");
                     router.push({name:"user_account_login"});
@@ -301,6 +379,11 @@ export default{
                 }
             })
 
+        const changeGame = (gameId) => {
+            currentGameId.value = gameId;
+            refresh_bots();
+        }
+        
         return {
             bots,
             botadd,
@@ -311,6 +394,10 @@ export default{
             refresh_bots,
             allGame,
             map,
+            gameInfos,
+            currentPage,
+            currentGameId,
+            changeGame,
         }
     }
 }
@@ -319,16 +406,16 @@ export default{
 
 <style scoped>
     .create:hover{
-        background-color: rgb(13,110,253) !important;
+        background-color: rgb(13,110,253,0.5) !important;
         
     }
 
     .update:hover{
-        background-color: rgb(255,193,7) !important;
+        background-color: rgb(255,193,7,0.5) !important;
     }
 
     .delete:hover{
-        background-color: rgb(220,53,69) !important;
+        background-color: rgb(220,53,69,0.5) !important;
     }
 
    .box{
@@ -351,12 +438,12 @@ export default{
     border-radius: 10px;
     cursor: pointer;
    }
-   .list .content:hover{
+   /* .list .content:hover{
         background:rgba(255, 255, 255, 0.3);
         box-shadow: -15px 30px 50px rgba(0,0,0,0.3);
         transform: scale(1.05) translateX(10px) translateY(-15px);
         transition: all 0.5s ease;
-   }
+   } */
 
    .rating {
     font-style: italic;

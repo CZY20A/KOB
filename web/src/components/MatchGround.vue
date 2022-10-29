@@ -1,7 +1,7 @@
 <template>
     <div class="matchground">
         <div class="row">
-            <div class="col-6">
+            <div class="col-4">
                 <div class="user-photo">
                     <img :src="$store.state.user.photo" alt="">
                 </div>
@@ -10,7 +10,17 @@
                     {{$store.state.user.username}}
                 </div>
             </div>
-            <div class="col-6">
+
+            <div class="col-4">
+                <div class="user-select-bot">
+                    <select class="form-select" aria-label="Default select example" v-model="select_bot">
+                    <option selected value="-1">亲自出马</option>
+                    <option v-for="bot in bots" :key="bot.id" :value="bot.id">{{bot.title}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-4">
                 <div class="user-photo">
                     <img :src="$store.state.pk.opponent_photo" alt="">
                 </div>
@@ -44,6 +54,8 @@ export default {
         let match_btn_info  = ref("开始匹配");
         const store = useStore();
         let finding = ref("stop");
+        let bots = ref([]);
+        let select_bot = ref("-1");
 
         const click_match_btn = () => {
             if(match_btn_info.value === '开始匹配'){
@@ -64,6 +76,7 @@ export default {
                 match_btn_info.value = '取消';
                 store.state.pk.socket.send(JSON.stringify({
                     event:"start-matching",
+                    bot_id:select_bot.value,
                 }))
             }else{
                 match_btn_info.value = '开始匹配'
@@ -74,10 +87,36 @@ export default {
             }
         }
 
+        let gameId = store.state.matchGameInfo.id;
+        const refresh_bots = () => {
+            $.ajax({
+                type:"get",
+                url:"http://172.18.90.64:3000/user/bot/getlistByGameId/",
+                headers:{
+                        Authorization:"Bearer " + store.state.user.token,
+                },
+                data: {
+                    gameId: gameId,                   
+                },
+                success(resp){
+                    bots.value = resp;
+                },
+                error() {
+                    alert("账号已在别的地方登录或登录过期，请重新登录");
+                    store.commit("logout");
+                    router.push({name:"user_account_login"});
+                }
+            })
+        }
+        refresh_bots();
+
+
         return {
             match_btn_info,
             click_match_btn,
-            finding
+            finding,
+            bots,
+            select_bot,
         }
     }
 }
@@ -124,6 +163,15 @@ div.user-username{
 
 .start:hover{
     background-color: rgba(255, 255, 255, 0.7);
+}
+
+div.user-select-bot {
+    padding-top: 15vh;
+}
+
+div.user-select-bot > select {
+    width: 60%;
+    margin:0 auto;
 }
 
 </style>

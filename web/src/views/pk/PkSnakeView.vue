@@ -9,9 +9,9 @@
 import PlayGround from '@/components/PlayGround.vue';
 import { onMounted, onUnmounted } from 'vue';
 import { useStore } from "vuex";
+import router from "@/router/index";
 import ResultBoard from '@/components/ResultBoard.vue';
 import MatchGround from "../../components/MatchGround.vue";
-import router from "@/router/index";
 
 export default {
     components:{
@@ -21,7 +21,9 @@ export default {
 },
     setup(){
         const store = useStore();
+        store.commit("updateLoser", "none");
         const socketUrl =  `ws://172.18.90.64:3000/websocket/${store.state.user.token}/`
+
 
         let socket = null;
         onMounted(() => {
@@ -47,6 +49,7 @@ export default {
                     setTimeout(() => {
                         store.commit('updateStatus', 'playing');
                     }, 2000)
+                    console.log(data.game)
                 } else if (data.event === 'move') {
                     const game = store.state.pk.gameObject;
                     const [snake0, snake1] = game.snakes;
@@ -78,6 +81,9 @@ export default {
             store.commit('updateStatus', 'matching');
         })
 
+        return {
+            
+        }
     }
 }
 

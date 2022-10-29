@@ -8,12 +8,7 @@
         <h5 class="modal-title" id="exampleModalLabel">游戏详情</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body" style="
-      font-size: 16px;
-    color: #000;
-    font-weight: bold;
-    font-size:18px;
-    margin: 10px 0 15px 0;">
+      <div class="modal-body" style="font-size: 16px; color: #000;font-weight: bold;font-size:18px;margin: 10px 0 15px 0;">
         {{description}}
       </div>
       <div class="modal-footer">
@@ -47,7 +42,7 @@
                 </a>
 
 
-                <router-link :to="{name:gameInfo.name}" @click="heartBeat">进入游戏</router-link>
+                <router-link :to="{name:gameInfo.name}" @click="heartBeat(gameInfo.id)">进入游戏</router-link>
             </div>
         </div>
 
@@ -121,7 +116,7 @@ export default {
             description.value = gameInfos.value[i].description;
         }
 
-        const heartBeat = () => {
+        const heartBeat = (gameId) => {
             $.ajax({
                     type:"GET",
                     url:"http://172.18.90.64:3000/heartbeat/",
@@ -134,7 +129,11 @@ export default {
                         router.push({name:"user_account_login"});
                     }
                 })
+            store.commit('updateMatchGameInfo', {
+                id:gameId
+            })
         }
+
 
         return {
             gameInfos,

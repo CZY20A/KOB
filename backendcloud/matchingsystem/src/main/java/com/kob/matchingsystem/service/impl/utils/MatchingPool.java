@@ -27,10 +27,10 @@ public class MatchingPool extends Thread{
 
 
 
-    public void addPlayer(Integer userId, Integer rating) {
+    public void addPlayer(Integer userId, Integer rating, Integer botId) {
         lock.lock();
         try {
-            players.add(new Player(userId, rating, 0));
+            players.add(new Player(userId, rating, 0, botId));
         } finally {
             lock.unlock();
         }
@@ -77,7 +77,7 @@ public class MatchingPool extends Thread{
         players = newPlayers;
     }
 
-    private boolean checkMatched(Player a, Player b) { //判断良民玩家是否匹配
+    private boolean checkMatched(Player a, Player b) { //判断两名玩家是否匹配
         int ratingDelta = Math.abs(a.getRating() - b.getRating());
         int waitingTime = Math.min(a.getWaitingTime(), b.getWaitingTime());
         return ratingDelta <= waitingTime * 20;
@@ -86,7 +86,9 @@ public class MatchingPool extends Thread{
     private void sendResult(Player a, Player b) { // 返回a和b的结果
         MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
         data.add("a_id", a.getId().toString());
+        data.add("a_bot_id", a.getBotId().toString());
         data.add("b_id", b.getId().toString());
+        data.add("b_bot_id", b.getBotId().toString());
         restTemplate.postForObject(startGameUrl, data, String.class);
     }
 

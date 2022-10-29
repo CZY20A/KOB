@@ -33,11 +33,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Map<String, String> info() {
-        UsernamePasswordAuthenticationToken authentication =
-                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-
-        UserDetailsImpl loginUser = (UserDetailsImpl) authentication.getPrincipal();
-        User user = loginUser.getUser();
+        User user = JwtUtil.getUserByToken();
 
         Map<String, String> map = new HashMap<>();
         map.put("message", "success");
