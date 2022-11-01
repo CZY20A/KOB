@@ -1,7 +1,7 @@
 <template>
     <div class="playground">
         <GameMap></GameMap>
-    <div class="result-board" v-if="show">
+    <div class="result-board" v-if="show && !$store.state.record.is_record">
        <div class="result-board-text">
             {{index}}
        </div>
@@ -25,7 +25,7 @@ export default {
 
         setTimeout(() => {
             show.value = false;
-        }, 1000);
+        }, 2000);
 
         return {
             index,

@@ -35,7 +35,7 @@
                         <div class="mb-3">
                                     <label class="form-label">所用游戏</label>
                                     <select class="form-select" aria-label="Default select example" v-model="botadd.gameId">
-                                        <option v-for="game in allGame" :key="game.id" :value="game.id" selected>{{game.title}}</option>
+                                        <option v-for="game in allGame" :key="game.id" :value="game.id" :selected="game.id === currentGameId? true:false">{{game.title}}</option>
                                     </select>
                             </div>
                         <div class="mb-3">
@@ -61,7 +61,7 @@
                     <div class="modal-footer">
                         <div class="message" style="color:red">{{botadd.message}}</div>
                         <button type="button" class="btn btn-primary create" style="background:rgba(13,110,253,0.3)" @click="add_bot">创建</button>
-                        <button type="button" class="btn btn-danger delete" data-bs-dismiss="modal" style="background:rgba(220,53,69,0.3)">取消</button>
+                        <button type="button" class="btn btn-danger delete" data-bs-dismiss="modal" style="background:rgba(220,53,69,0.3)" @click="() => botadd.message = '' ">取消</button>
                     </div>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                         <div style="margin-bottom:5px;margin-left: 5px;"><span>创建时间:{{bot.createtime}}</span> </div>
                         <div style="margin-bottom:5px;margin-left: 5px;"><span>修改时间:{{bot.modifytime}}</span> </div>
                         <div style="margin-bottom:10px;margin-left: 5px;"> <span>所用游戏:{{map.get(bot.gameId)}}</span>  <button @click="remove_bot(bot.id)" type="button" class="btn float-end delete" style="background:rgba(220,53,69);margin-right: 5px;color:white;">删除</button></div>
-                    </div>
+                        </div>
 
 
                         <!-- Modal -->
@@ -381,8 +381,10 @@ export default{
 
         const changeGame = (gameId) => {
             currentGameId.value = gameId;
+            botadd.gameId = gameId;
             refresh_bots();
         }
+
         
         return {
             bots,

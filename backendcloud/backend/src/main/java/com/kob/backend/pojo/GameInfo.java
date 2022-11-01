@@ -13,4 +13,5 @@ public class GameInfo {
     private String description;
     private String title;
     private String brief;
+    private String exampleCode;
 }

@@ -64,6 +64,15 @@ public class BotServiceImpl implements BotService {
             return map;
         }
 
+        QueryWrapper<Bot> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("game_id", bot.getGameId());
+        queryWrapper.eq("user_id", user.getId());
+        Long botCounts = botMapper.selectCount(queryWrapper);
+        if(botCounts >= 10) {
+            map.put("message", "每个用户每个游戏最多10个bot");
+            return map;
+        }
+
         Date date = new Date();
         bot.setCreatetime(date);
         bot.setModifytime(date);

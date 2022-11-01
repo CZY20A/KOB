@@ -22,6 +22,7 @@ export default {
     setup(){
         const store = useStore();
         store.commit("updateLoser", "none");
+        store.commit("updateIsRecord", false);
         const socketUrl =  `ws://172.18.90.64:3000/websocket/${store.state.user.token}/`
 
 
@@ -49,7 +50,6 @@ export default {
                     setTimeout(() => {
                         store.commit('updateStatus', 'playing');
                     }, 2000)
-                    console.log(data.game)
                 } else if (data.event === 'move') {
                     const game = store.state.pk.gameObject;
                     const [snake0, snake1] = game.snakes;

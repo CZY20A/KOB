@@ -41,7 +41,7 @@ public class WebSocketServer {
     private final static String removePlayerUrl = "http://127.0.0.1:3001/player/remove/";
 
     //WebSocketServer不是spring中service、controller那样的单例对象，故需要用静态对象使userMapper单例
-    private static UserMapper userMapper;
+    public static UserMapper userMapper;
 
     public static RecordMapper recordMapper;
 

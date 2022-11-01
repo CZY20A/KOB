@@ -1,7 +1,7 @@
 <template>
    <!-- Modal -->
-<div class="modal fade my-model" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" 
-    style="position:absolute; ">
+<div class="modal modal-xl fade my-model" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" 
+    style="position:absolute;">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -10,7 +10,26 @@
       </div>
       <div class="modal-body" style="font-size: 16px; color: #000;font-weight: bold;font-size:18px;margin: 10px 0 15px 0;">
         {{description}}
+        <br>示例代码：<br>
+        <VAceEditor
+                                        id="code"
+                                        v-model:value="exampleCode"
+                                        @init="editorInit"
+                                        lang="c_cpp"
+                                        theme="monokai"
+                                        :options="{
+                                            enableBasicAutocompletion: true,
+                                            enableSnippets: true,
+                                            enableLiveAutocompletion: true,
+                                            fontSize: 17,
+                                            tabSize: 2,
+                                            showPrintMargin: false,
+                                            highlightActiveLine: true,
+                                            }"
+                                        style="height: 500px" />
       </div>
+
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
@@ -67,19 +86,26 @@
 import $ from 'jquery';
 import { ref } from 'vue';
 import { useStore } from 'vuex';
-
 import router from "@/router/index";
+import { VAceEditor } from 'vue3-ace-editor';
+import ace from 'ace-builds';
 
 export default {
     components:{
-        
+        VAceEditor,
     },
     setup() {
+        ace.config.set(
+            "basePath", 
+            "https://cdn.jsdelivr.net/npm/ace-builds@" + require('ace-builds').version + "/src-noconflict/"
+        )
+
         const store = useStore();
         let gameInfos = ref([]);
         let undetermined = ref([]);
         let currentPage = ref(1);
         let description = ref("");
+        let exampleCode = ref("");
 
             $.ajax({
                 type:"GET",
@@ -114,6 +140,8 @@ export default {
         const getDescription = (i) => {
             heartBeat();
             description.value = gameInfos.value[i].description;
+            exampleCode.value = gameInfos.value[i].exampleCode;
+            console.log(exampleCode);
         }
 
         const heartBeat = (gameId) => {
@@ -141,6 +169,7 @@ export default {
             description,
             getDescription,
             heartBeat,
+            exampleCode,
         }
     }
 }

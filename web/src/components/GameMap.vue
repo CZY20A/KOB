@@ -40,16 +40,26 @@ export default{
         let right_photo = ref("");
 
         let id = parseInt(store.state.user.id);
-        if (store.state.pk.a_id === id) {
-            left_name.value = "您:" + store.state.user.username;
-            left_photo.value = store.state.user.photo;
-            right_name = "您的对手:" + store.state.pk.opponent_username;
-            right_photo = store.state.pk.opponent_photo;
-        }else {
-            right_name.value = "您:" + store.state.user.username;
-            right_photo.value = store.state.user.photo;
-            left_name = "您的对手:" + store.state.pk.opponent_username;
-            left_photo = store.state.pk.opponent_photo;
+        if(!store.state.record.is_record){
+            if (store.state.pk.a_id === id) {
+                left_name.value = "您:";
+                left_name.value  += store.state.user.username;
+                left_photo.value = store.state.user.photo;
+                right_name.value = "您的对手:";
+                right_name.value += store.state.pk.opponent_username;
+                right_photo.value = store.state.pk.opponent_photo;
+            }else {
+                right_name.value = "您:";
+                right_name.value += store.state.user.username;
+                right_photo.value = store.state.user.photo;
+                left_name.value += store.state.pk.opponent_username
+                left_photo.value = store.state.pk.opponent_photo;
+            }
+        } else {
+            left_name.value = store.state.record.record_a_username;
+            left_photo.value = store.state.record.record_a_photo;
+            right_name.value = store.state.record.record_b_username;
+            right_photo.value = store.state.record.record_b_photo;
         }
 
         onMounted(() => {
