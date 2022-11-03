@@ -77,7 +77,7 @@ export class Snake extends AcGameObject {
         const dy = this.next_cell.y - this.cells[0].y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < this.eps) {
+        if (distance <= this.eps) {
             this.cells[0] = this.next_cell; //cells[0]的r和c没变所以要重新赋值头部
             this.next_cell = null;
             this.status = 'idle';

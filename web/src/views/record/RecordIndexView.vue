@@ -81,6 +81,15 @@ export default{
         let search_username = ref("");
         let pages = ref([]);
 
+
+        if(store.state.record.record_is_back) {
+            currentPage = store.state.record.record_back_page;
+            store.commit('updateRecordIsBack', false);
+        }
+
+
+        search_username.value = store.state.record.search_username;
+
         const click_page = page => {
             if(page === -2) page = currentPage - 1;
             else if(page === -1) page = currentPage + 1;
@@ -116,7 +125,7 @@ export default{
         const pull_page = page => {
             $.ajax({
                 type:"GET",
-                url:"http://172.18.90.64:3000/record/getlist/",
+                url:"https://app3844.acapp.acwing.com.cn/api/record/getlist/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -136,7 +145,7 @@ export default{
                 }
             })
         }
-        pull_page(currentPage);
+        
 
         const stringTo2D = (map) => {
             let g = [];
@@ -152,6 +161,7 @@ export default{
         }
 
         const open_record_content = recordId => {
+            store.commit('updateReocrdBackPage', currentPage);
             for(const record of records.value) {
                 if(record.record.id === recordId) {
                     console.log(record);
@@ -188,13 +198,14 @@ export default{
         }
 
         const search_by_username = (page) => {
+            store.commit("updateSearchUsername", search_username.value);
             if(search_username.value === '') {
                 pull_page(page);
             }
             else{
                 $.ajax({
                     type:"GET",
-                    url:"http://172.18.90.64:3000/record/getlistByUsername/",
+                    url:"https://app3844.acapp.acwing.com.cn/api/record/getlistByUsername/",
                     headers:{
                             Authorization:"Bearer " + store.state.user.token,
                     },
@@ -214,13 +225,16 @@ export default{
                         update_pages();
                     },
                     error() {
-                        alert("账号已在别的地方登录或登录过期，请重新登录");
-                        store.commit("logout");
-                        router.push({name:"user_account_login"});
+                    alert("账号已在别的地方登录或登录过期，请重新登录");
+                    store.commit("logout");
+                    router.push({name:"user_account_login"});
                     }
+                    
                 })
             }
         }
+
+        search_by_username(currentPage);
 
         return {
             pull_page,

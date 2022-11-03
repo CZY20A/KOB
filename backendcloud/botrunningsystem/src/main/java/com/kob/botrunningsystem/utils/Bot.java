@@ -1,7 +1,11 @@
 package com.kob.botrunningsystem.utils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.function.Supplier;
 
 /**
  * 当前支持java语言
@@ -9,7 +13,7 @@ import java.util.List;
  * 地图信息#我的x坐标#我的y坐标#(我的操作)#对手的x坐标#对手的y坐标#(对手的操作)
  * 地图共13行14列，地图信息为一个13*14的一维字符串，若该处为墙则为1，否则为0
  */
-public class Bot implements com.kob.botrunningsystem.utils.BotInterface{
+public class Bot implements Supplier<Integer> {
 
     static class Cell {
         public int x, y;
@@ -49,7 +53,6 @@ public class Bot implements com.kob.botrunningsystem.utils.BotInterface{
         return cells;
     }
 
-    @Override
     public Integer nextMove(String input) { //返回值:0123分别表示上右下左
         String[] strs = input.split("#");
         int[][] g = new int[13][14]; // 墙的信息
@@ -80,5 +83,18 @@ public class Bot implements com.kob.botrunningsystem.utils.BotInterface{
             }
         }
         return 0;
+    }
+
+    @Override
+    public Integer get() {
+        File file = new File("input.txt");
+        try {
+            Scanner sc = new Scanner(file);
+            return nextMove(sc.next());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 }

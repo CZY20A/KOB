@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/user/bot/")
+@RequestMapping("/api/user/bot/")
 public class BotComtroller {
     @Autowired
     BotServiceImpl botService;

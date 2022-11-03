@@ -41,7 +41,7 @@ export default {
         login(context, data) {
             $.ajax({
                 type: "POST",
-                url: "http://172.18.90.64:3000/user/account/token/",
+                url: "https://app3844.acapp.acwing.com.cn/api/user/account/token/",
                 data: {
                     username: data.username,
                     password: data.password,
@@ -63,7 +63,7 @@ export default {
         getInfo(context, data) {
             $.ajax({
                 type: "GET",
-                url: "http://172.18.90.64:3000/user/account/info/",
+                url: "https://app3844.acapp.acwing.com.cn/api/user/account/info/",
                 headers: {
                     Authorization: "Bearer " + context.state.token,
                 },

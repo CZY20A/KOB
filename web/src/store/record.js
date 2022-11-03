@@ -3,6 +3,7 @@
 export default {
     state: {
         is_record: false,
+        search_username:"",
         a_steps: "",
         b_steps: "",
         record_loser: "",
@@ -11,6 +12,8 @@ export default {
         record_a_photo:"",
         record_b_username:"",
         record_b_photo:"",
+        record_back_page:1,
+        record_is_back:false,
     },
     getters: {},
     mutations: {
@@ -32,6 +35,15 @@ export default {
             state.record_a_photo = data.a_photo;
             state.record_b_username = data.b_username;
             state.record_b_photo = data.b_photo;
+        },
+        updateSearchUsername(state, data) {
+            state.search_username = data;
+        },
+        updateReocrdBackPage(state, data) {
+            state.record_back_page = data;
+        },
+        updateRecordIsBack(state, data) {
+            state.record_is_back = data;
         }
     },
     actions: {},

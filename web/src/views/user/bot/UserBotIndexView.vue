@@ -206,14 +206,25 @@ export default{
                 "    @Override\n" +
                 "    public Integer nextMove(String input) { //返回值:0123分别表示上右下左 \n" +
                 "        return 0;\n" +
-                "    }\n" +
+                "    }\n\n" +
+                "    //该函数不需要更改后台执行时使用\n"+
+                "    @Override\n" +
+                "    public Integer get() {\n" +
+                "        File file = new File(\"input.txt\");\n" +
+                "        try {\n" +
+                "            Scanner sc = new Scanner(file);\n" +
+                "            return nextMove(sc.next());\n" +
+                "        } catch (FileNotFoundException e) {\n" +
+                "            throw new RuntimeException(e);\n" +
+                "        }\n" +
+                "    }"
                 "}\n";
 
         const add_bot = () => {
             botadd.message = "";
             $.ajax({
                 type:"POST",
-                url:"http://172.18.90.64:3000/user/bot/add/",
+                url:"https://app3844.acapp.acwing.com.cn/api/user/bot/add/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -237,6 +248,17 @@ export default{
                 "    public Integer nextMove(String input) { //返回值:0123分别表示上右下左 \n" +
                 "        return 0;\n" +
                 "    }\n" +
+                "    @Override\n\n" +
+                "    //该函数不需要更改后台执行时使用\n"+
+                "    public Integer get() {\n" +
+                "        File file = new File(\"input.txt\");\n" +
+                "        try {\n" +
+                "            Scanner sc = new Scanner(file);\n" +
+                "            return nextMove(sc.next());\n" +
+                "        } catch (FileNotFoundException e) {\n" +
+                "            throw new RuntimeException(e);\n" +
+                "        }\n" +
+                "    }"
                 "}\n";
                         botadd.description = "";
                         botadd.title = "";
@@ -258,7 +280,7 @@ export default{
         const remove_bot = (id) => {
             $.ajax({
                 type:"POST",
-                url:"http://172.18.90.64:3000/user/bot/remove/",
+                url:"https://app3844.acapp.acwing.com.cn/api/user/bot/remove/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -281,7 +303,7 @@ export default{
             message.value = "";
             $.ajax({
                 type:"POST",
-                url:"http://172.18.90.64:3000/user/bot/update/",
+                url:"https://app3844.acapp.acwing.com.cn/api/user/bot/update/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -313,7 +335,7 @@ export default{
         const get_game_pages = (page) => {
             $.ajax({
                 type:"GET",
-                url:"http://172.18.90.64:3000/game/infopage/",
+                url:"https://app3844.acapp.acwing.com.cn/api/game/infopage/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -340,7 +362,7 @@ export default{
             message.value = "";
             $.ajax({
                 type:"get",
-                url:"http://172.18.90.64:3000/user/bot/getlistByGameId/",
+                url:"https://app3844.acapp.acwing.com.cn/api/user/bot/getlistByGameId/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -363,7 +385,7 @@ export default{
         let allGame = ref([]);
         $.ajax({
                 type:"GET",
-                url:"http://172.18.90.64:3000/game/all/",
+                url:"https://app3844.acapp.acwing.com.cn/api/game/all/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },

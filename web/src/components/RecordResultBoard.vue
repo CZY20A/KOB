@@ -22,6 +22,7 @@ export default {
 
         const back = () => {
            store.commit('updateRecordResult', 'none');
+           store.commit('updateRecordIsBack', true);
            router.push({name:'record_index'});
         }
 

@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HeartBeat {
-    @GetMapping("/heartbeat/")
+    @GetMapping("/api/heartbeat/")
     public void hearBeat() {
 
     }

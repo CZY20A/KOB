@@ -59,15 +59,15 @@ export default{
         const click_page = page => {
             if(page === -2) page = currentPage - 1;
             else if(page === -1) page = currentPage + 1;
-            let max_pages = parseInt(Math.ceil(total_users / 10));
-
+            let max_pages = parseInt(Math.ceil(total_users / 5));
+            console.log(max_pages)
             if(page >= 1 && page <= max_pages) {
                 pull_page(page);
             }
         }
 
         const update_pages = () => {
-            let max_pages = parseInt(Math.ceil(total_users / 10));
+            let max_pages = parseInt(Math.ceil(total_users / 5));
             let new_pages = [];
             if(currentPage - 2 <= 0) {
                 for(let i = 1; i <= 5 && i <= max_pages; ++i)
@@ -91,7 +91,7 @@ export default{
         const pull_page = page => {
             $.ajax({
                 type:"GET",
-                url:"http://172.18.90.64:3000/ranklist/getlist/",
+                url:"https://app3844.acapp.acwing.com.cn/api/ranklist/getlist/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },

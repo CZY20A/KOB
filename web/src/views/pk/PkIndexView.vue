@@ -109,7 +109,7 @@ export default {
 
             $.ajax({
                 type:"GET",
-                url:"http://172.18.90.64:3000/game/infopage/",
+                url:"https://app3844.acapp.acwing.com.cn/api/game/infopage/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -147,7 +147,7 @@ export default {
         const heartBeat = (gameId) => {
             $.ajax({
                     type:"GET",
-                    url:"http://172.18.90.64:3000/heartbeat/",
+                    url:"https://app3844.acapp.acwing.com.cn/api/heartbeat/",
                      headers:{
                         Authorization:"Bearer " + store.state.user.token,
                     },
