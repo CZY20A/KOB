@@ -8,7 +8,8 @@ import NotFoud from '../views/error/NotFound';
 import UserAccountLoginView from '../views/user/account/UserAccountLoginView';
 import UserAccountRegisterView from '../views/user/account/UserAccountRegisterView';
 import store from '../store/index';
-import PkSnakeView from '../views/pk/PkSnakeView'
+import PkSnakeView from '../views/pk/PkSnakeView';
+import PkTankView from '../views/pk/PkTankView';
 
 const routes = [
 
@@ -34,6 +35,14 @@ const routes = [
         component: PkSnakeView,
         meta: {
             requestAuth: true,
+        }
+    },
+    {
+        path:'/pk/tank/',
+        name:'tank',
+        component: PkTankView,
+        meta:{
+            requestAuth:true,
         }
     },
     {

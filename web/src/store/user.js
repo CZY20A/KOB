@@ -41,12 +41,13 @@ export default {
         login(context, data) {
             $.ajax({
                 type: "POST",
-                url: "https://app3844.acapp.acwing.com.cn/api/user/account/token/",
+                url: "http://172.18.90.64:3000/api/user/account/token/",
                 data: {
                     username: data.username,
                     password: data.password,
                 },
                 success(resp) {
+                    console.log(resp)
                     if (resp.message === 'success') {
                         localStorage.setItem('jwt_token', resp.token);
                         context.commit('updateToken', resp.token);
@@ -63,7 +64,7 @@ export default {
         getInfo(context, data) {
             $.ajax({
                 type: "GET",
-                url: "https://app3844.acapp.acwing.com.cn/api/user/account/info/",
+                url: "http://172.18.90.64:3000/api/user/account/info/",
                 headers: {
                     Authorization: "Bearer " + context.state.token,
                 },

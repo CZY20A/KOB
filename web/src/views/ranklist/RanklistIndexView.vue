@@ -91,7 +91,7 @@ export default{
         const pull_page = page => {
             $.ajax({
                 type:"GET",
-                url:"https://app3844.acapp.acwing.com.cn/api/ranklist/getlist/",
+                url:"http://172.18.90.64:3000/api/ranklist/getlist/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },

@@ -61,7 +61,7 @@ export default {
             if(match_btn_info.value === '开始匹配'){
                 $.ajax({
                     type:"GET",
-                    url:"https://app3844.acapp.acwing.com.cn/api/heartbeat/",
+                    url:"http://172.18.90.64:3000/api/heartbeat/",
                      headers:{
                         Authorization:"Bearer " + store.state.user.token,
                     },
@@ -91,7 +91,7 @@ export default {
         const refresh_bots = () => {
             $.ajax({
                 type:"get",
-                url:"https://app3844.acapp.acwing.com.cn/api/user/bot/getlistByGameId/",
+                url:"http://172.18.90.64:3000/api/user/bot/getlistByGameId/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },

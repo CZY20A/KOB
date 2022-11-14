@@ -224,7 +224,7 @@ export default{
             botadd.message = "";
             $.ajax({
                 type:"POST",
-                url:"https://app3844.acapp.acwing.com.cn/api/user/bot/add/",
+                url:"http://172.18.90.64:3000/api/user/bot/add/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -280,7 +280,7 @@ export default{
         const remove_bot = (id) => {
             $.ajax({
                 type:"POST",
-                url:"https://app3844.acapp.acwing.com.cn/api/user/bot/remove/",
+                url:"http://172.18.90.64:3000/api/user/bot/remove/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -303,7 +303,7 @@ export default{
             message.value = "";
             $.ajax({
                 type:"POST",
-                url:"https://app3844.acapp.acwing.com.cn/api/user/bot/update/",
+                url:"http://172.18.90.64:3000/api/user/bot/update/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -335,7 +335,7 @@ export default{
         const get_game_pages = (page) => {
             $.ajax({
                 type:"GET",
-                url:"https://app3844.acapp.acwing.com.cn/api/game/infopage/",
+                url:"http://172.18.90.64:3000/api/game/infopage/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -362,7 +362,7 @@ export default{
             message.value = "";
             $.ajax({
                 type:"get",
-                url:"https://app3844.acapp.acwing.com.cn/api/user/bot/getlistByGameId/",
+                url:"http://172.18.90.64:3000/api/user/bot/getlistByGameId/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -385,7 +385,7 @@ export default{
         let allGame = ref([]);
         $.ajax({
                 type:"GET",
-                url:"https://app3844.acapp.acwing.com.cn/api/game/all/",
+                url:"http://172.18.90.64:3000/api/game/all/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },

@@ -1,30 +1,26 @@
 <template>
-    <PlayGround v-if="$store.state.pk.status === 'playing'"></PlayGround>
-    <MatchGround v-if="$store.state.pk.status === 'matching'"></MatchGround>
+    <TankPlayground v-if="store.state.pk.status === 'playing'"></TankPlayground>
+    <MatchGround v-if="store.state.pk.status === 'matching'"></MatchGround>
     <ResultBoard v-if="$store.state.pk.loser !== 'none'"></ResultBoard>
-    
 </template>
 
 <script>
-import PlayGround from '@/components/PlayGround.vue';
-import { onMounted, onUnmounted } from 'vue';
-import { useStore } from "vuex";
-import router from "@/router/index";
-import ResultBoard from '@/components/ResultBoard.vue';
+import TankPlayground from '@/components/tank/TankPlayground.vue'
+import { useStore } from 'vuex';
 import MatchGround from "../../components/MatchGround.vue";
+import ResultBoard from '@/components/ResultBoard.vue';
+import {onMounted, onUnmounted} from 'vue'
 
 export default {
     components:{
-        PlayGround,
-        MatchGround,
-        ResultBoard,
-    },
-    setup(){
+    TankPlayground,
+    MatchGround,
+    ResultBoard
+},
+    setup() {
         const store = useStore();
         store.commit("updateLoser", "none");
-        store.commit("updateIsRecord", false);
-        const socketUrl =  `ws://172.18.90.64:3000/websocket/${store.state.user.token}/`
-
+        const socketUrl = `ws://172.18.90.64:3000/websocket/tank/${store.state.user.token}/`
 
         let socket = null;
         onMounted(() => {
@@ -50,30 +46,27 @@ export default {
                     setTimeout(() => {
                         store.commit('updateStatus', 'playing');
                     }, 2000)
-                } else if (data.event === 'move') {
+                } else if(data.event === 'operate') {
                     const game = store.state.pk.gameObject;
-                    const [snake0, snake1] = game.snakes;
-                    snake0.set_direction(data.a_direction);
-                    snake1.set_direction(data.b_direction);
-                } else if (data.event === 'result') {
+                    const [tank0, tank1] = game.tanks;
+                    if(data.a_operate !== null || data.a_operate !== '')
+                        tank0.update_operate(parseInt(data.a_operate))
+                    if(data.b_operate !== null || data.b_operate !== '')
+                        tank1.update_operate(parseInt(data.b_operate))
+                } else if(data.event === 'unoperate') {
                     const game = store.state.pk.gameObject;
-                    const [snake0, snake1] = game.snakes;
-                    store.commit("updateLoser", data.loser);
-                    if(data.loser === 'all' || data.loser === 'A') {
-                        snake0.status = 'die';
-                    }
-                    if(data.loser === 'all' || data.loser === 'B') {
-                        snake1.status = 'die';
-                    }
-                } else if (data.event === 'logout') {
-                    store.dispatch('logout');
-                    router.push({name:'home'});
+                    const [tank0, tank1] = game.tanks;
+                    if(data.a_operate !== null || data.a_operate !== '')
+                        tank0.update_unoperate(parseInt(data.a_operate))
+                    if(data.b_operate !== null || data.b_operate !== '')
+                        tank1.update_unoperate(parseInt(data.b_operate))
                 }
             }
 
             socket.onclose = () => {
 
             }
+
         })
 
         onUnmounted(() => {
@@ -83,7 +76,7 @@ export default {
         })
 
         return {
-            
+            store,
         }
     }
 }

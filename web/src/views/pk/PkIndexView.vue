@@ -97,7 +97,7 @@ export default {
     setup() {
         ace.config.set(
             "basePath", 
-            "https://cdn.jsdelivr.net/npm/ace-builds@" + require('ace-builds').version + "/src-noconflict/"
+            "http://cdn.jsdelivr.net/npm/ace-builds@" + require('ace-builds').version + "/src-noconflict/"
         )
 
         const store = useStore();
@@ -109,7 +109,7 @@ export default {
 
             $.ajax({
                 type:"GET",
-                url:"https://app3844.acapp.acwing.com.cn/api/game/infopage/",
+                url:"http://172.18.90.64:3000/api/game/infopage/",
                 headers:{
                         Authorization:"Bearer " + store.state.user.token,
                 },
@@ -147,7 +147,7 @@ export default {
         const heartBeat = (gameId) => {
             $.ajax({
                     type:"GET",
-                    url:"https://app3844.acapp.acwing.com.cn/api/heartbeat/",
+                    url:"http://172.18.90.64:3000/api/heartbeat/",
                      headers:{
                         Authorization:"Bearer " + store.state.user.token,
                     },
