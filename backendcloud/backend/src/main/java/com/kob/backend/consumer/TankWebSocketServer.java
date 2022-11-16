@@ -8,6 +8,9 @@ import com.kob.backend.pojo.User;
 import io.netty.util.internal.ConcurrentSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -21,11 +24,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint("/websocket/tank/{token}")  // 注意不要以'/'结尾
 public class TankWebSocketServer {
 
+    private final static String addPlayerUrl = "http://127.0.0.1:3001/tank/player/add/";
+    private final static String removePlayerUrl = "http://127.0.0.1:3001/tank/player/remove/";
+
     private Session session = null;
 
     private User user;
 
-    final public static ConcurrentSet<Integer> matchingPool = new ConcurrentSet<>();
+//    final public static ConcurrentSet<Integer> matchingPool = new ConcurrentSet<>();
 
     final public static ConcurrentHashMap<Integer, TankWebSocketServer> users = new ConcurrentHashMap<>();
 
@@ -33,6 +39,12 @@ public class TankWebSocketServer {
 
     private TankGame game = null;
 
+    public static RestTemplate restTemplate;
+
+    @Autowired
+    public void setRestTemplate(RestTemplate restTemplate) {
+        TankWebSocketServer.restTemplate = restTemplate;
+    }
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
         TankWebSocketServer.userMapper = userMapper;
@@ -99,20 +111,16 @@ public class TankWebSocketServer {
     }
 
     private void startMatching() {
-        matchingPool.add(this.user.getId());
-        while(matchingPool.size() >= 2) {
-            Iterator<Integer> iterator = matchingPool.iterator();
-            Integer aId = iterator.next();
-            iterator.remove();
-            Integer bId = iterator.next();
-            iterator.remove();
-
-            TankWebSocketServer.startGame(aId, bId);
-        }
+        MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
+        data.add("user_id", user.getId().toString());
+        data.add("rating", user.getRating().toString());
+        restTemplate.postForObject(addPlayerUrl, data, String.class);
     }
 
     private void stopMatching() {
-        matchingPool.remove(this.user.getId());
+        MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
+        data.add("user_id", user.getId().toString());
+        restTemplate.postForObject(removePlayerUrl, data, String.class);
     }
 
     private void operate(Integer op) {
@@ -149,6 +157,9 @@ public class TankWebSocketServer {
             operate(data.getInteger("operate"));
         } else if("unoperate".equals(event)) {
             unOperate(data.getInteger("operate"));
+        } else if("result".equals(event)) {
+            game.setLoser(data.getString("loser"));
+            game.setStatus("finished");
         }
     }
 

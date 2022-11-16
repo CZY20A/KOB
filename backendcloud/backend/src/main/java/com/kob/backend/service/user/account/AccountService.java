@@ -11,4 +11,8 @@ public interface AccountService {
     Map<String, String> getToken(String username, String password);
 
     Map<String, String> register(RegisterUser user);
+
+    Map<String, String> changeUsername(String username, Integer id);
+
+    Map<String, String> changeImage(String url, Integer id);
 }

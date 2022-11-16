@@ -4,12 +4,60 @@
        
 
         <div class="row">
-            <div class="col-3">
+            <div class="col-3" style="text-align:center">
                 <div class="card box" style="margin-top:20px;padding: 0px;" >
                     <div class="card-body" style="margin:0px;">
                         <img :src="$store.state.user.photo" alt="" style="width: 100%;height: 100%;"/>
                         <span class="rating">rating: {{$store.state.user.rating}}</span>
                     </div>
+                    <div >
+                        <button  type="button" class="btn edit-btn" data-bs-target="#changeImg" data-bs-toggle="modal" @click="refresh_message">修改头像</button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="changeImg" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" style="font-style: italic;color:black;">修改头像</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="close_change_image"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="text" class="form-control" placeholder="请上传自己图床上图片的url" v-model="img">
+                            </div>
+                            <div class="modal-footer">
+                                <div class="message" style="color:red">{{message}}</div>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="close_change_image">Close</button>
+                                <button type="button" class="btn btn-primary" @click="change_image">Save changes</button>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+
+
+                        <button class="btn edit-btn" data-bs-toggle="modal" data-bs-target="#changeUserName"  @click="refresh_message">修改名称</button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="changeUserName" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" style="font-style: italic;color:black;">修改用户名</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="close_change_username"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div>
+                                    <input type="text" class="form-control" v-model="username">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="message" style="color:red">{{message}}</div>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="close_change_username">Close</button>
+                                <button type="button" class="btn btn-primary" @click="change_username">Save changes</button>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
 
@@ -185,7 +233,86 @@ export default{
         const store = useStore();
         let bots = ref([]);
         let message = ref("")
+        let username = ref(store.state.user.username);
 
+        const refresh_message = () => {
+            message.value = "";
+        }
+
+        const change_username = () => {
+            message.value = "";
+
+            $.ajax({
+                type:"POST",
+                url:"http://172.18.90.64:3000/api/user/account/changeUsername/",
+                headers:{
+                        Authorization:"Bearer " + store.state.user.token,
+                },
+                data:{
+                    username:username.value,
+                    id:store.state.user.id,
+                },
+                success(resp) {
+                    if(resp.message === 'success') {
+                        Modal.getInstance("#changeUserName").hide();
+                        store.dispatch('getInfo', {
+                            success(){
+                                
+                            },
+                            error(){
+                                store.dispatch('logout');
+                                store.commit("updatePullingInfo", false);
+                            }
+                        })
+                    } else {
+                        message.value = resp.message;
+                    }
+                }
+            })
+        }
+
+        const close_change_username = () => {
+            username.value = store.state.user.username;
+            message.value = "";
+        }
+
+        let img = ref("");
+        const change_image = () => {
+            message.value = "";
+            $.ajax({
+                type:"POST",
+                url:"http://172.18.90.64:3000/api/user/account/changeImage/",
+                headers:{
+                        Authorization:"Bearer " + store.state.user.token,
+                },
+                data:{
+                    url:img.value,
+                    id:store.state.user.id,
+                },
+                success(resp) {
+                    if(resp.message === 'success') {
+                        Modal.getInstance("#changeImg").hide();
+                        img.value = "";
+                        store.dispatch('getInfo', {
+                            success(){
+                                
+                            },
+                            error(){
+                                store.dispatch('logout');
+                                store.commit("updatePullingInfo", false);
+                            }
+                        })
+                    } else {
+                        message.value = resp.message;
+                    }
+                }
+            })
+        }
+
+        const close_change_image = () => {
+            img.value = "";
+            message.value = "";
+        }
 
         const botadd  = reactive({
             title:"",
@@ -422,6 +549,13 @@ export default{
             currentPage,
             currentGameId,
             changeGame,
+            username,
+            close_change_username,
+            change_image,
+            img,
+            close_change_image,
+            change_username,
+            refresh_message,
         }
     }
 }
@@ -473,5 +607,22 @@ export default{
     font-style: italic;
     font-size: 20px;
     font-weight: 600;
+   }
+
+   .edit-btn {
+    padding: 8px 20px;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #000;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: 500;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    margin-right: 8px;
+   }
+
+   .edit-btn:hover {
+        background-color: rgba(0, 0, 0, 0.8);
    }
 </style>

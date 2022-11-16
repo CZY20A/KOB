@@ -1,12 +1,14 @@
 package com.kob.matchingsystem;
 
 import com.kob.matchingsystem.service.impl.MatchingServiceImpl;
+import com.kob.matchingsystem.service.impl.TankMatchingServiceImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class MatchingSystemApplication {
     public static void main(String[] args) {
+        TankMatchingServiceImpl.tankMatchingPool.start();
         MatchingServiceImpl.matchingPool.start(); //启动匹配线程
         SpringApplication.run(MatchingSystemApplication.class, args);
     }

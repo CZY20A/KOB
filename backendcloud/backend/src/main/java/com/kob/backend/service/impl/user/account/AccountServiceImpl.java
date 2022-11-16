@@ -118,4 +118,51 @@ public class AccountServiceImpl implements AccountService {
 
         return map;
     }
+
+    @Override
+    public Map<String, String> changeUsername(String username, Integer id) {
+        Map<String, String> map = new HashMap<>();
+        username = username.trim();
+        if("".equals(username) || username == null) {
+            map.put("message", "用户名不能为空");
+            return map;
+        }
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("username", username);
+        List<User> users = userMapper.selectList(userQueryWrapper);
+
+        if(users != null && users.size() > 0) {
+            map.put("message", "用户名已存在");
+            return map;
+        }
+
+        User user = userMapper.selectById(id);
+        user.setUsername(username);
+        userMapper.updateById(user);
+        map.put("message", "success");
+        return map;
+    }
+
+    @Override
+    public Map<String, String> changeImage(String url, Integer id) {
+        Map<String, String> map = new HashMap<>();
+        if("".equals(url) || url == null) {
+            map.put("message", "url不能为空");
+            return map;
+        }
+        if(url.lastIndexOf(".") == -1) {
+            map.put("message", "url格式错误");
+            return map;
+        }
+        String exert = url.substring(url.lastIndexOf(".") + 1);
+        if(!"jpeg".equals(exert) && !"png".equals(exert) && !"jpg".equals(exert)) {
+            map.put("message", "仅支持jpg或jpeg或png格式");
+            return map;
+        }
+        User user = userMapper.selectById(id);
+        user.setPhoto(url);
+        userMapper.updateById(user);
+        map.put("message", "success");
+        return map;
+    }
 }

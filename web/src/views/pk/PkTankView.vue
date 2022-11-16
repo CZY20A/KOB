@@ -60,6 +60,18 @@ export default {
                         tank0.update_unoperate(parseInt(data.a_operate))
                     if(data.b_operate !== null || data.b_operate !== '')
                         tank1.update_unoperate(parseInt(data.b_operate))
+                } else if(data.event === 'result') {
+                    const game = store.state.pk.gameObject;
+                    store.state.pk.gameObject.is_end = true;
+                    const [tank0, tank1] = game.tanks;
+                    store.commit("updateLoser", data.loser);
+                    console.log(store.state.pk.loser);
+                    if(data.loser === 'all' || data.loser === 'A') {
+                        tank0.status = 0;
+                    }
+                    if(data.loser === 'all' || data.loser === 'B') {
+                        tank1.status = 0;
+                    }
                 }
             }
 

@@ -9,6 +9,8 @@ export class TankGameMap extends AcGameObject {
         this.ctx = ctx;
         this.parent = parent;
 
+        this.is_end = false;
+
         this.store = store;
         this.rows = 15;
         this.cols = 15;
@@ -137,7 +139,22 @@ export class TankGameMap extends AcGameObject {
         })
     }
 
+    send_result() {
+        if(this.is_end) return;
+        for(const t of this.tanks) {
+            if(t.status === 0)  {
+                let loser = t.id === 1 ? 'A' : 'B';
+                this.is_end = true;
+                this.store.state.pk.socket.send(JSON.stringify({
+                    event: 'result',
+                    loser: loser
+                }))
+            }
+        }
+    }
+
     start() {
+        
         this.add_listener();
         this.update_size();
         this.draw_map();
@@ -161,6 +178,7 @@ export class TankGameMap extends AcGameObject {
     }
 
     update() {
+        this.send_result();
         this.update_size();
         this.render();
 

@@ -41,6 +41,7 @@ export default {
         const restart = () => {
             store.commit("updateStatus", "matching");
             store.commit("updateLoser", "none");
+            console.log(store.state.pk.loser)
             store.commit("updateOpponent", {
                 username: "我的对手",
                 photo:"https://cdn.acwing.com/media/article/image/2022/08/09/1_1db2488f17-anonymous.png",

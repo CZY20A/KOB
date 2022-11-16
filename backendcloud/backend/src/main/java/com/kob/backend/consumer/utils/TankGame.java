@@ -2,11 +2,14 @@ package com.kob.backend.consumer.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.kob.backend.consumer.TankWebSocketServer;
+import com.kob.backend.pojo.User;
 
 import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TankGame extends Thread{
+    private long lastTIme = System.currentTimeMillis();
+    private long quietTime = 0;
     private Integer rows = 15;
     private Integer cols = 15;
     private Integer walls_cnt = 20;
@@ -39,6 +42,24 @@ public class TankGame extends Thread{
 
     public Integer getPlayerBId() {
         return playerBId;
+    }
+
+    public void setLoser(String loser) {
+        lock.lock();
+        try {
+            this.loser = loser;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void setStatus(String status) {
+        lock.lock();
+        try {
+            this.status = status;
+        } finally {
+            lock.unlock();
+        }
     }
 
     public TankGame(Integer playerAId, Integer playerBId) {
@@ -181,24 +202,64 @@ public class TankGame extends Thread{
         }
     }
 
+    private void updateUserRating(Integer userId, Integer rating) {
+        User user = TankWebSocketServer.userMapper.selectById(userId);
+        user.setRating(rating);
+        TankWebSocketServer.userMapper.updateById(user);
+    }
+
+    private void saveToDatabase() {
+        Integer ratingA = TankWebSocketServer.userMapper.selectById(playerAId).getRating();
+        Integer ratingB = TankWebSocketServer.userMapper.selectById(playerBId).getRating();
+
+        if("A".equals(loser)) {
+            ratingA -= 2;
+            ratingB += 5;
+        } else if("B".equals(loser)) {
+            ratingA += 5;
+            ratingB -= 2;
+        }
+
+        if(!"all".equals(loser)) {
+            updateUserRating(playerAId, ratingA);
+            updateUserRating(playerBId, ratingB);
+        }
+    }
+
     public void sendResult() {
         JSONObject resp = new JSONObject();
         resp.put("event", "result");
         resp.put("loser", loser);
+        saveToDatabase();
         sendAllMessage(resp.toJSONString());
     }
 
     @Override
     public void run() {
         while(true) {
+            quietTime += System.currentTimeMillis() - lastTIme;
+            lastTIme = System.currentTimeMillis();
+            if(quietTime >= 1000 * 300) {
+                System.out.println("长久未操作终止:"+quietTime);
+                lock.lock();
+                try {
+                    loser = "all";
+                } finally {
+                    lock.unlock();
+                }
+                sendResult();
+                break;
+            }
             if(!"playing".equals(this.status)) {
                 sendResult();
                 break;
             }
             if(this.nextStepA != null || this.nextStepB != null) {
+                quietTime = 0;
                 sendOperate();
             }
             if(this.stopStepA != null || this.stopStepB != null) {
+                quietTime = 0;
                 sendUnOperate();
             }
         }
